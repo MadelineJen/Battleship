@@ -1,1 +1,92 @@
+import java.awt.Graphics;
+import java.awt.Color;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener; 
+import java.util.ArrayList;
+import java.util.List;
+
+public class Circles {
+
+    public static void main (String[] args) {
+        CircleCanvas canvas = new CircleCanvas();
+        frame.add(canvas)
+        frame.setVisible(true);
+    }
+}
+
+class MyCircle {
+	int x, y, r;
+	Color circleColor;
+
+	public MyCircle(int x, int y, int r, Color c) {
+		this.x = x;
+		this.y = y;
+		this.r = r;
+		this.circleColor = c;
+	}
+
+	public void setLocation(int x2, int y2) {
+		this.x = x2;
+		this.y = y2;
+	}
+}
+
+class CircleCanvas implements MouseListener, MouseMotionListener {
+
+	private ArrayList<MyCircle> circles = new ArrayList<>();
+	private Color circleColor = Color.WHITE;
+
+  public CircleCanvas() {
+      addMouseListener(this);
+      addMouseMotionListener(this);
+}
+
+@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+			for(MyCircle d : circles) {
+				g.setColor(d.circleColor);
+				int r = 50;
+				g.fillOval(d.x - r / 2, d.y - r / 2, r, r);
+
+			}
+			
+			repaint();
+
+		}
+
+@Override
+	public void mouseClicked(MouseEvent e) {
+		int r = 50;  
+		int x1 = e.getX();
+		int y1 = e.getY(); 
+		System.out.println("Click detected at: (" + x1 + "," + y1 + ").");
+		circles.add(new MyCircle(e.getX(), e.getY(), r, circleColor));
+		repaint();
+}
+
+@Override
+	public void mousePressed(MouseEvent e) {
+		System.out.println("Mouse pressed at " + e);
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		System.out.println("Mouse released at " + e);
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {}
+	public void mouseDragged(MouseEvent e) {}
+	public void mouseMoved(MouseEvent e) {} 
+}	
+
+
+
+
+
+
 
