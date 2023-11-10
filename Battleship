@@ -20,8 +20,10 @@ import java.awt.event.MouseEvent;
 public class Battleship {
     public static void main (String[] args){
         JFrame frame = new JFrame("Battleship Game");
+        Grids grid = new Grids();
 
         RectangleCanvas canvas = new RectangleCanvas();
+        frame.add(grid);
         frame.add(canvas);
         frame.setSize(900, 1000); //please choose a size for the frame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
