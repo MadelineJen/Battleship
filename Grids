@@ -1,1 +1,88 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+
+import javax.swing.JPanel;
+
+class Grids extends RectangleCanvas {
+	
+
+    public Grids(){
+        setFocusable(true);   
+    }
+    
+    static final int rows = 11;
+    static final int columns = 11;
+    
+    //OverRide paint component to create grid
+    @Override 
+    protected void paintComponent(Graphics g) {
+    	super.paintComponent(g);
+		System.out.println("HELLO");
+
+		/*
+		//Get frame widths 
+		int width = getSize().width;
+		width = width/13;
+		System.out.println("WIDTH"+width);
+		
+        int height = getSize().height;
+        height = height/13;
+        */
+
+		//Variables
+		final int rows = 11;
+		final int columns = 11;
+		final int startRowX = 50;
+		final int startRowY = 100;
+		final int startColX = 100;
+		final int startColY = 50;
+		final int cellSize = 50;
+		
+		final int endRowX = 600;
+		final int endRowY = 100;
+		final int endColX = 100;
+		final int endColY = 600;
+		
+        
+			
+
+    	
+    	//Create the grids (row diviser lines--horizontal)
+    	for (int i=0; i<rows; i++) {
+    		
+    		//New variables 
+    		int NewStartY = startRowY + i * cellSize;
+    		int NewEndY = endRowY + i*cellSize;
+    		
+    		//g.drawLine(x,y,x,y);    		
+    		g.drawLine(startRowX, NewStartY, endRowX, NewEndY);
+          		
+
+            System.out.println("ROW NEW STAARTY"+NewStartY+"STARTX"+startRowX);
+    		System.out.println("ROW NEW ENDY"+endRowX+"ENDX"+NewEndY);
+
+
+ 
+    	}
+    	
+    	//Create the grids (column diviser lines-- vertical)
+    	
+    	for (int i=0; i<columns; i++) {
+    		
+    		System.out.println("HAPPENING:");
+    		//New variables 
+    		int NewStartX = startColX + i * cellSize;
+    		int NewEndX = endColX + i*cellSize;
+    		
+    		//g.drawLine(x,y,x,y);    		
+    		g.drawLine(NewStartX, startColY, NewEndX, endColY);
+    		
+    	}
+    	
+    }
+     
+}
 
