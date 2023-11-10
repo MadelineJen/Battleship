@@ -1,0 +1,75 @@
+/* 
+Madeline Jen
+Anela Takiguci
+Ana Luciano
+Battleship Game Project
+*/
+import java.util.List;
+import java.util.ArrayList;
+import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseEvent;
+
+public class Battleship {
+    public static void main (String[] args){
+        JFrame frame = new JFrame("Battleship Game");
+
+        RectangleCanvas canvas = new RectangleCanvas();
+        frame.add(canvas);
+        frame.setSize(900, 1000); //please choose a size for the frame
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+}
+class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListener {
+    private Color RectColor = Color.MAGENTA;
+    private int dragX;
+    private int dragY;
+    private boolean dragging = false;
+    private int clickCount = 0;
+
+    public RectangleCanvas(){
+        setBackground(Color.BLUE);
+        addMouseListener(this);
+        addMouseMotionListener(this);
+        setFocusable(true);
+
+    }
+     
+    public void mouseClicked(MouseEvent e) {
+    	if (clickCount < 4) {
+            drawRectangle(e.getX(), e.getY(), clickCount + 1, 10);
+            clickCount++;
+    	}
+    }
+    private void drawRectangle(int x, int y, int width, int height) {
+        Graphics g = getGraphics();
+        g.setColor(RectColor);
+        g.fillRect(x, y, width * 10, height *1);
+    }
+
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    public void mouseExited(MouseEvent e) {
+    }
+
+    public void mouseMoved(MouseEvent e) {
+    }
+
+	public void mouseDragged(MouseEvent e) {
+	}
+	
+	public void mousePressed(MouseEvent e) {
+	}
+	
+	public void mouseReleased(MouseEvent e) {
+		
+	}
+}
+//DON'T FORGET TO DOCUMENT YOUR CODING THOUGHTS AS YOU ARE WORKING
