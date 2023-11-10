@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.event.MouseListener;
@@ -29,7 +31,7 @@ public class Battleship {
 class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListener {
     private Color RectColor = Color.MAGENTA;
     private ArrayList<Rectangle> rectangles = new ArrayList<>();
-    private Rectangle currentDraggedRectanglw = null;
+    private Rectangle currentDraggedRectangle = null;
     private int otherX, otherY;
     private int clickCount = 0;
 
