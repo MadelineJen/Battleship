@@ -20,9 +20,7 @@ public class Battleship {
         JFrame frame = new JFrame("Battleship Game");
 
         RectangleCanvas canvas = new RectangleCanvas();
-        Grids grid = new Grids();
         frame.add(canvas);
-        frame.add(grid);
         frame.setSize(900, 1000); //please choose a size for the frame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
@@ -30,29 +28,64 @@ public class Battleship {
 }
 class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListener {
     private Color RectColor = Color.MAGENTA;
-    private int dragX;
-    private int dragY;
-    private boolean dragging = false;
+    private ArrayList<Rectangle> rectangles = new ArrayList<>();
+    private Rectangle currentDraggedRectanglw = null;
+    private int otherX, otherY;
     private int clickCount = 0;
 
-    public RectangleCanvas(){
+    public RectangleCanvas() {
         setBackground(Color.BLUE);
         addMouseListener(this);
         addMouseMotionListener(this);
         setFocusable(true);
+    }
 
-    }
-     
     public void mouseClicked(MouseEvent e) {
-    	if (clickCount < 4) {
-            drawRectangle(e.getX(), e.getY(), clickCount + 1, 10);
+        if (clickCount < 4) {
+            int x = e.getX();
+            int y = e.getY();
+            int width = (clickCount + 1) * 10;
+            int height = 10;
+            Rectangle newRect = new Rectangle(x, y, width, height);
+            rectangles.add(newRect);
             clickCount++;
-    	}
+            repaint();
+        }
     }
-    private void drawRectangle(int x, int y, int width, int height) {
-        Graphics g = getGraphics();
-        g.setColor(RectColor);
-        g.fillRect(x, y, width * 10, height *1);
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        for (Rectangle rect : rectangles) {
+            g.setColor(RectColor);
+            g.fillRect(rect.x, rect.y, rect.width, rect.height);
+        }
+    }
+
+    public void mousePressed(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+
+        for (Rectangle rect : rectangles) {
+            if (rect.contains(x, y)) {
+                currentDraggedRectangle = rect;
+                otherX = x - rect.x;
+                otherY = y - rect.y;
+                break;
+            }
+        }
+    }
+
+    public void mouseReleased(MouseEvent e) {
+        currentDraggedRectangle = null;
+    }
+
+    public void mouseDragged(MouseEvent e) {
+        if (currentDraggedRectangle != null) {
+            int x = e.getX();
+            int y = e.getY();
+            currentDraggedRectangle.setLocation(x - otherX, y - otherY);
+            repaint();
+        }
     }
 
     public void mouseEntered(MouseEvent e) {
@@ -63,15 +96,4 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
 
     public void mouseMoved(MouseEvent e) {
     }
-
-	public void mouseDragged(MouseEvent e) {
-	}
-	
-	public void mousePressed(MouseEvent e) {
-	}
-	
-	public void mouseReleased(MouseEvent e) {
-		
-	}
 }
-//DON'T FORGET TO DOCUMENT YOUR CODING THOUGHTS AS YOU ARE WORKING
