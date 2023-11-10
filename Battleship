@@ -20,7 +20,9 @@ public class Battleship {
         JFrame frame = new JFrame("Battleship Game");
 
         RectangleCanvas canvas = new RectangleCanvas();
+        Grids grid = new Grids();
         frame.add(canvas);
+        frame.add(grid);
         frame.setSize(900, 1000); //please choose a size for the frame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
