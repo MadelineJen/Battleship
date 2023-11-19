@@ -2,20 +2,24 @@ import java.awt.Graphics;
 import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener; 
+import java.awt.event.MouseMotionListener;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Circles {
 
-    public static void main (String[] args) {
-        CircleCanvas canvas = new CircleCanvas();
-        frame.add(canvas)
-        frame.setVisible(true);
-    }
+	public static void main(String[] args) {
+		JFrame frame = new JFrame("Connect The Dots");
+
+		CircleCanvas canvas = new CircleCanvas();
+		frame.add(canvas);
+		frame.setSize(640, 480);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+	}
 }
 
 class MyCircle {
@@ -35,19 +39,27 @@ class MyCircle {
 	}
 }
 
-class CircleCanvas implements MouseListener, MouseMotionListener {
+class CircleCanvas extends JPanel implements MouseListener, MouseMotionListener, KeyListener  {
 
 	private ArrayList<MyCircle> circles = new ArrayList<>();
 	private Color circleColor = Color.WHITE;
 
-  public CircleCanvas() {
-      addMouseListener(this);
-      addMouseMotionListener(this);
-}
 
-@Override
+	public CircleCanvas() {
+		setBackground(Color.BLUE);
+		addMouseListener(this);
+		addMouseMotionListener(this);
+		addKeyListener(this);
+		setFocusable(true);
+	}
+
+	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		for (int i = 1; i < circles.size(); i++) {
+			MyCircle circle = circles.get(i);
+			MyCircle prevCircle = circles.get(i - 1);
+		}
 			for(MyCircle d : circles) {
 				g.setColor(d.circleColor);
 				int r = 50;
@@ -59,7 +71,20 @@ class CircleCanvas implements MouseListener, MouseMotionListener {
 
 		}
 
-@Override
+	public void keyPressed(KeyEvent e) {
+
+		if(e.getKeyChar() == 'r') {
+			circleColor = Color.RED;
+		} else if(e.getKeyChar() == 'w') {
+			circleColor = Color.WHITE;
+		} else { 
+			System.out.println("Pressed an odd letter: " + e);
+		}
+		repaint(); 
+	}
+	public void keyReleased(KeyEvent e) {}
+
+	@Override
 	public void mouseClicked(MouseEvent e) {
 		int r = 50;  
 		int x1 = e.getX();
@@ -67,11 +92,10 @@ class CircleCanvas implements MouseListener, MouseMotionListener {
 		System.out.println("Click detected at: (" + x1 + "," + y1 + ").");
 		circles.add(new MyCircle(e.getX(), e.getY(), r, circleColor));
 		repaint();
-}
+	}
 
-@Override
+	@Override
 	public void mousePressed(MouseEvent e) {
-		System.out.println("Mouse pressed at " + e);
 	}
 	@Override
 	public void mouseReleased(MouseEvent e) {
@@ -79,14 +103,12 @@ class CircleCanvas implements MouseListener, MouseMotionListener {
 	}
 	@Override
 	public void mouseEntered(MouseEvent e) {}
+	@Override
 	public void mouseExited(MouseEvent e) {}
-	public void mouseDragged(MouseEvent e) {}
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
+	public void mouseDragged(MouseEvent e) {
+	}
 	public void mouseMoved(MouseEvent e) {} 
 }	
-
-
-
-
-
-
-
