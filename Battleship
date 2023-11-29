@@ -8,12 +8,17 @@ import java.util.List;
 import java.util.ArrayList;
 import java.awt.Graphics;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -21,22 +26,21 @@ public class Battleship {
 	public static void main (String[] args){
 		JFrame frame = new JFrame("Battleship Game");
 		RectangleCanvas canvas = new RectangleCanvas();
+		JButton confirm = new JButton("Confirm");
 		Grids grid = new Grids();
 		frame.add(canvas);
 		frame.add(grid);
 		frame.setSize(650, 650); //please choose a size for the frame
-		frame.addKeyListener(grid);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
 }
-class Grids extends RectangleCanvas implements KeyListener {
+class Grids extends RectangleCanvas {
     private List<Integer[]> centerCoordinates = new ArrayList<>();
 
     public Grids() {
         super();
         setFocusable(true);
-        addKeyListener(this); // Add KeyListener to the panel
     }
 
     @Override
@@ -59,7 +63,7 @@ class Grids extends RectangleCanvas implements KeyListener {
 
         final Color GridColor = Color.BLACK;
 
-        // Create the grids (row divider lines--horizontal)
+        // Creates the grids (row divider lines--horizontal)
         for (int i = 0; i < rows; i++) {
             g.setColor(GridColor);
             int NewStartY = startRowY + i * cellSize;
@@ -67,7 +71,7 @@ class Grids extends RectangleCanvas implements KeyListener {
             g.drawLine(startRowX, NewStartY, endRowX, NewEndY);
         }
 
-        // Create the grids (column divider lines-- vertical)
+        // Creates the grids (column divider lines-- vertical)
         for (int i = 0; i < columns; i++) {
             g.setColor(GridColor);
             int NewStartX = startColX + i * cellSize;
@@ -75,42 +79,18 @@ class Grids extends RectangleCanvas implements KeyListener {
             g.drawLine(NewStartX, startColY, NewEndX, endColY);
         }
 
-        // Iterate through rectangles and calculate center coordinates
+        // Iterates through rectangles and calculate center coordinates
         for (Rectangle rect : rectangles) {
             int centerX = rect.x + rect.width / 2;
             int centerY = rect.y + rect.height / 2;
 
-            // Store the center coordinates in the ArrayList
+            // Stores the center coordinates in the ArrayList
             Integer[] center = { centerX, centerY };
             centerCoordinates.add(center);
         }
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (e.getKeyChar() == 'r') {
-            rotateRectangles();
-            repaint();
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-    }
-
-    private void rotateRectangles() {
-        for (Rectangle rect : rectangles) {
-            int temp = rect.width;
-            rect.width = rect.height;
-            rect.height = temp;
-        }
-    }
-
-    // Add a method to get the center coordinates ArrayList
+    // Added a method to get the center coordinates ArrayList
     public List<Integer[]> getCenterCoordinates() {
         return centerCoordinates;
     }
@@ -141,7 +121,7 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
             int width = (clickCount + 1) * gridSize;
             int height = gridSize;
 
-            // Ensure the rectangle stays within the grid boundaries
+            // Ensures that the rectangle stays within the grid boundaries
             if (x + width > gridWidth * gridSize) {
                 x = (gridWidth - (clickCount + 1)) * gridSize;
             }
@@ -163,7 +143,7 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
             int gridX = (x / gridSize) * gridSize;
             int gridY = (y / gridSize) * gridSize;
 
-            // Ensure the rectangle stays within the grid boundaries
+            // Ensures that the rectangle stays within the grid boundaries
             if (gridX + currentDraggedRectangle.width > gridWidth * gridSize) {
                 gridX = (gridWidth - currentDraggedRectangle.width / gridSize) * gridSize;
             }
@@ -173,7 +153,19 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
 
             currentDraggedRectangle.setLocation(gridX, gridY);
             repaint();
+            if (isRotateKeyPressed(e)) {
+                int temp = currentDraggedRectangle.width;
+                currentDraggedRectangle.width = currentDraggedRectangle.height;
+                currentDraggedRectangle.height = temp;
+            }
+
+            repaint();
+            
         }
+    }
+
+    private boolean isRotateKeyPressed(MouseEvent e) {
+        return e.isShiftDown();
     }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -182,7 +174,7 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
             g.fillRect(rect.x, rect.y, rect.width, rect.height);
         }
     }
-
+    
     public void mousePressed(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
