@@ -16,25 +16,37 @@ import javax.swing.JPanel;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class Battleship {
-    public static void main (String[] args){
-        JFrame frame = new JFrame("Battleship Game");
-        RectangleCanvas canvas = new RectangleCanvas();
-        Grids grid = new Grids();
-        frame.add(canvas);
-        frame.add(grid);
-        frame.setSize(900, 1000); //please choose a size for the frame
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+	public void keyTyped(KeyEvent e) {		
+	}
+
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyChar() == 'r') {
+            rotateRectangles();
+            repaint();
+        }	
+	}
+
+	public void keyReleased(KeyEvent e) {
+	}
+	
+	private void rotateRectangles() {
+        for (Rectangle rect : rectangles) {
+            int temp = rect.width;
+            rect.width = rect.height;
+            rect.height = temp;
+        }
     }
 }
 class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListener {
     private Color RectColor = Color.MAGENTA;
-    private ArrayList<Rectangle> rectangles = new ArrayList<>();
+    protected ArrayList<Rectangle> rectangles = new ArrayList<>();
     private Rectangle currentDraggedRectangle = null;
     private int otherX, otherY;
     private int clickCount = 0;
+    private int gridSize = 50; // Size of each grid square
 
     public RectangleCanvas() {
         setBackground(Color.BLUE);
@@ -45,10 +57,10 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
 
     public void mouseClicked(MouseEvent e) {
         if (clickCount < 4) {
-            int x = e.getX();
-            int y = e.getY();
-            int width = (clickCount + 1) * 10;
-            int height = 10;
+            int x = (e.getX() / gridSize) * gridSize;
+            int y = (e.getY() / gridSize) * gridSize;
+            int width = (clickCount + 1) * gridSize;
+            int height = gridSize;
             Rectangle newRect = new Rectangle(x, y, width, height);
             rectangles.add(newRect);
             clickCount++;
@@ -86,10 +98,15 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
         if (currentDraggedRectangle != null) {
             int x = e.getX();
             int y = e.getY();
-            currentDraggedRectangle.setLocation(x - otherX, y - otherY);
+
+            int gridX = ((x / gridSize) * gridSize);
+            int gridY = ((y / gridSize) * gridSize);
+
+            currentDraggedRectangle.setLocation(gridX, gridY);
             repaint();
         }
     }
+    
 
     public void mouseEntered(MouseEvent e) {
     }
@@ -100,3 +117,185 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
     public void mouseMoved(MouseEvent e) {
     }
 }
+	public void keyTyped(KeyEvent e) {		
+	}
+
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyChar() == 'r') {
+            rotateRectangles();
+            repaint();
+        }	
+	}
+
+	public void keyReleased(KeyEvent e) {
+	}
+	
+	private void rotateRectangles() {
+        for (Rectangle rect : rectangles) {
+            int temp = rect.width;
+            rect.width = rect.height;
+            rect.height = temp;
+        }
+    }
+}
+class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListener {
+    private Color RectColor = Color.MAGENTA;
+    protected ArrayList<Rectangle> rectangles = new ArrayList<>();
+    private Rectangle currentDraggedRectangle = null;
+    private int otherX, otherY;
+    private int clickCount = 0;
+    private int gridSize = 50; // Size of each grid square
+
+    public RectangleCanvas() {
+        setBackground(Color.BLUE);
+        addMouseListener(this);
+        addMouseMotionListener(this);
+        setFocusable(true);
+    }
+
+    public void mouseClicked(MouseEvent e) {
+        if (clickCount < 4) {
+            int x = (e.getX() / gridSize) * gridSize;
+            int y = (e.getY() / gridSize) * gridSize;
+            int width = (clickCount + 1) * gridSize;
+            int height = gridSize;
+            Rectangle newRect = new Rectangle(x, y, width, height);
+            rectangles.add(newRect);
+            clickCount++;
+            repaint();
+        }
+    }
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        for (Rectangle rect : rectangles) {
+            g.setColor(RectColor);
+            g.fillRect(rect.x, rect.y, rect.width, rect.height);
+        }
+    }
+
+    public void mousePressed(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+
+        for (Rectangle rect : rectangles) {
+            if (rect.contains(x, y)) {
+                currentDraggedRectangle = rect;
+                otherX = x - rect.x;
+                otherY = y - rect.y;
+                break;
+            }
+        }
+    }
+
+    public void mouseReleased(MouseEvent e) {
+        currentDraggedRectangle = null;
+    }
+
+    public void mouseDragged(MouseEvent e) {
+        if (currentDraggedRectangle != null) {
+            int x = e.getX();
+            int y = e.getY();
+
+            int gridX = ((x / gridSize) * gridSize);
+            int gridY = ((y / gridSize) * gridSize);
+
+            currentDraggedRectangle.setLocation(gridX, gridY);
+            repaint();
+        }
+    }
+    
+
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    public void mouseExited(MouseEvent e) {
+    }
+
+    public void mouseMoved(MouseEvent e) {
+    }
+}
+
+public class Battleship {
+    public static void main (String[] args){
+        JFrame frame = new JFrame("Battleship Game");
+        RectangleCanvas canvas = new RectangleCanvas();
+        Grids grid = new Grids();
+        frame.add(canvas);
+        frame.add(grid);
+        frame.setSize(900, 1000); //please choose a size for the frame
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+}
+
+	public void keyTyped(KeyEvent e) {		
+	}
+
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyChar() == 'r') {
+            rotateRectangles();
+            repaint();
+        }	
+	}
+
+	public void keyReleased(KeyEvent e) {
+	}
+	
+	private void rotateRectangles() {
+        for (Rectangle rect : rectangles) {
+            int temp = rect.width;
+            rect.width = rect.height;
+            rect.height = temp;
+        }
+    }
+}
+class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListener {
+    private Color RectColor = Color.MAGENTA;
+    protected ArrayList<Rectangle> rectangles = new ArrayList<>();
+    private Rectangle currentDraggedRectangle = null;
+    private int otherX, otherY;
+    private int clickCount = 0;
+    private int gridSize = 50; // Size of each grid square
+
+    public RectangleCanvas() {
+        setBackground(Color.BLUE);
+        addMouseListener(this);
+        addMouseMotionListener(this);
+        setFocusable(true);
+    }
+
+    public void mouseClicked(MouseEvent e) {
+        if (clickCount < 4) {
+            int x = (e.getX() / gridSize) * gridSize;
+            int y = (e.getY() / gridSize) * gridSize;
+            int width = (clickCount + 1) * gridSize;
+            int height = gridSize;
+            Rectangle newRect = new Rectangle(x, y, width, height);
+            rectangles.add(newRect);
+            clickCount++;
+            repaint();
+        }
+    }
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        for (Rectangle rect : rectangles) {
+            g.setColor(RectColor);
+            g.fillRect(rect.x, rect.y, rect.width, rect.height);
+        }
+    }
+
+    public void mousePressed(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+
+        for (Rectangle rect : rectangles) {
+            if (rect.contains(x, y)) {
+                currentDraggedRectangle = rect;
+                otherX = x - rect.x;
+                otherY = y - rect.y;
+                break;
+            }
+        }
+    }
