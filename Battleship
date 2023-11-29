@@ -3,7 +3,7 @@ Madeline Jen
 Anela Takiguci
 Ana Luciano
 Battleship Game Project
-*/
+ */
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.Graphics;
@@ -18,161 +18,161 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 public class Battleship {
-   public static void main (String[] args){
-       JFrame frame = new JFrame("Battleship Game");
-       RectangleCanvas canvas = new RectangleCanvas();
-       Grids grid = new Grids();
-       frame.add(canvas);
-       frame.add(grid);
-       frame.setSize(900, 1000); //please choose a size for the frame
-       frame.addKeyListener(grid);
-       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-       frame.setVisible(true);
-   }
+	public static void main (String[] args){
+		JFrame frame = new JFrame("Battleship Game");
+		RectangleCanvas canvas = new RectangleCanvas();
+		Grids grid = new Grids();
+		frame.add(canvas);
+		frame.add(grid);
+		frame.setSize(900, 1000); //please choose a size for the frame
+		frame.addKeyListener(grid);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+	}
 }
 class Grids extends RectangleCanvas implements KeyListener {
 	private List<Integer[]> centerCoordinates = new ArrayList<>();
 
-    public Grids() {
-        super();
-        setFocusable(true);
-        addKeyListener(this); // Add KeyListener to the panel
-    }
+	public Grids() {
+		super();
+		setFocusable(true);
+		addKeyListener(this); // Add KeyListener to the panel
+	}
 
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 
-        final int rows = 11;
-        final int columns = 11;
-        final int startRowX = 50;
-        final int startRowY = 100;
-        final int startColX = 100;
-        final int startColY = 50;
-        final int cellSize = 50;
-        final int endRowX = 600;
-        final int endRowY = 100;
-        final int endColX = 100;
-        final int endColY = 600;
+		final int rows = 11;
+		final int columns = 11;
+		final int startRowX = 50;
+		final int startRowY = 100;
+		final int startColX = 100;
+		final int startColY = 50;
+		final int cellSize = 50;
+		final int endRowX = 600;
+		final int endRowY = 100;
+		final int endColX = 100;
+		final int endColY = 600;
 
-        final Color GridColor = Color.BLACK;
+		final Color GridColor = Color.BLACK;
 
-        for (int i = 0; i < rows; i++) {
-            g.setColor(GridColor);
-            int NewStartY = startRowY + i * cellSize;
-            int NewEndY = endRowY + i * cellSize;
-            g.drawLine(startRowX, NewStartY, endRowX, NewEndY);
-        }
+		for (int i = 0; i < rows; i++) {
+			g.setColor(GridColor);
+			int NewStartY = startRowY + i * cellSize;
+			int NewEndY = endRowY + i * cellSize;
+			g.drawLine(startRowX, NewStartY, endRowX, NewEndY);
+		}
 
-        for (int i = 0; i < columns; i++) {
-            g.setColor(GridColor);
-            int NewStartX = startColX + i * cellSize;
-            int NewEndX = endColX + i * cellSize;
-            g.drawLine(NewStartX, startColY, NewEndX, endColY);
-        }
+		for (int i = 0; i < columns; i++) {
+			g.setColor(GridColor);
+			int NewStartX = startColX + i * cellSize;
+			int NewEndX = endColX + i * cellSize;
+			g.drawLine(NewStartX, startColY, NewEndX, endColY);
+		}
 
-        // Iterate through rectangles and calculate center coordinates
-        for (Rectangle rect : rectangles) {
-            int centerX = rect.x + rect.width / 2;
-            int centerY = rect.y + rect.height / 2;
+		// Iterate through rectangles and calculate center coordinates
+		for (Rectangle rect : rectangles) {
+			int centerX = rect.x + rect.width / 2;
+			int centerY = rect.y + rect.height / 2;
 
-            // Store the center coordinates in the ArrayList
-            Integer[] center = { centerX, centerY };
-            centerCoordinates.add(center);
-        }
-    }
+			// Store the center coordinates in the ArrayList
+			Integer[] center = { centerX, centerY };
+			centerCoordinates.add(center);
+		}
+	}
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (e.getKeyChar() == 'r') {
-            rotateRectangles();
-            repaint();
-        }
-    }
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyChar() == 'r') {
+			rotateRectangles();
+			repaint();
+		}
+	}
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-    }
+	@Override
+	public void keyReleased(KeyEvent e) {
+	}
 
-    private void rotateRectangles() {
-        for (Rectangle rect : rectangles) {
-            int temp = rect.width;
-            rect.width = rect.height;
-            rect.height = temp;
-        }
-    }
+	private void rotateRectangles() {
+		for (Rectangle rect : rectangles) {
+			int temp = rect.width;
+			rect.width = rect.height;
+			rect.height = temp;
+		}
+	}
 
-    // Add a method to get the center coordinates ArrayList
-    public List<Integer[]> getCenterCoordinates() {
-        return centerCoordinates;
-    }
+	// Add a method to get the center coordinates ArrayList
+	public List<Integer[]> getCenterCoordinates() {
+		return centerCoordinates;
+	}
 }
 class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListener {
-   private Color RectColor = Color.MAGENTA;
-   protected ArrayList<Rectangle> rectangles = new ArrayList<>();
-   private Rectangle currentDraggedRectangle = null;
-   private int otherX, otherY;
-   private int clickCount = 0;
-   private int gridSize = 50; // Size of each grid square
-   public RectangleCanvas() {
-       setBackground(Color.BLUE);
-       addMouseListener(this);
-       addMouseMotionListener(this);
-       setFocusable(true);
-   }
-   public void mouseClicked(MouseEvent e) {
-       if (clickCount < 4) {
-           int x = (e.getX() / gridSize) * gridSize;
-           int y = (e.getY() / gridSize) * gridSize;
-           int width = (clickCount + 1) * gridSize;
-           int height = gridSize;
-           Rectangle newRect = new Rectangle(x, y, width, height);
-           rectangles.add(newRect);
-           clickCount++;
-           repaint();
-       }
-   }
-   public void paintComponent(Graphics g) {
-       super.paintComponent(g);
-       for (Rectangle rect : rectangles) {
-           g.setColor(RectColor);
-           g.fillRect(rect.x, rect.y, rect.width, rect.height);
-       }
-   }
-   public void mousePressed(MouseEvent e) {
-       int x = e.getX();
-       int y = e.getY();
-       for (Rectangle rect : rectangles) {
-           if (rect.contains(x, y)) {
-               currentDraggedRectangle = rect;
-               otherX = x - rect.x;
-               otherY = y - rect.y;
-               break;
-           }
-       }
-   }
-   public void mouseReleased(MouseEvent e) {
-       currentDraggedRectangle = null;
-   }
-   public void mouseDragged(MouseEvent e) {
-       if (currentDraggedRectangle != null) {
-           int x = e.getX();
-           int y = e.getY();
-           int gridX = ((x / gridSize) * gridSize);
-           int gridY = ((y / gridSize) * gridSize);
-           currentDraggedRectangle.setLocation(gridX, gridY);
-           repaint();
-       }
-   }
-  
-   public void mouseEntered(MouseEvent e) {
-   }
-   public void mouseExited(MouseEvent e) {
-   }
-   public void mouseMoved(MouseEvent e) {
-   }
+	private Color RectColor = Color.MAGENTA;
+	protected ArrayList<Rectangle> rectangles = new ArrayList<>();
+	private Rectangle currentDraggedRectangle = null;
+	private int otherX, otherY;
+	private int clickCount = 0;
+	private int gridSize = 50; // Size of each grid square
+	public RectangleCanvas() {
+		setBackground(Color.BLUE);
+		addMouseListener(this);
+		addMouseMotionListener(this);
+		setFocusable(true);
+	}
+	public void mouseClicked(MouseEvent e) {
+		if (clickCount < 4) {
+			int x = (e.getX() / gridSize) * gridSize;
+			int y = (e.getY() / gridSize) * gridSize;
+			int width = (clickCount + 1) * gridSize;
+			int height = gridSize;
+			Rectangle newRect = new Rectangle(x, y, width, height);
+			rectangles.add(newRect);
+			clickCount++;
+			repaint();
+		}
+	}
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		for (Rectangle rect : rectangles) {
+			g.setColor(RectColor);
+			g.fillRect(rect.x, rect.y, rect.width, rect.height);
+		}
+	}
+	public void mousePressed(MouseEvent e) {
+		int x = e.getX();
+		int y = e.getY();
+		for (Rectangle rect : rectangles) {
+			if (rect.contains(x, y)) {
+				currentDraggedRectangle = rect;
+				otherX = x - rect.x;
+				otherY = y - rect.y;
+				break;
+			}
+		}
+	}
+	public void mouseReleased(MouseEvent e) {
+		currentDraggedRectangle = null;
+	}
+	public void mouseDragged(MouseEvent e) {
+		if (currentDraggedRectangle != null) {
+			int x = e.getX();
+			int y = e.getY();
+			int gridX = ((x / gridSize) * gridSize);
+			int gridY = ((y / gridSize) * gridSize);
+			currentDraggedRectangle.setLocation(gridX, gridY);
+			repaint();
+		}
+	}
+
+	public void mouseEntered(MouseEvent e) {
+	}
+	public void mouseExited(MouseEvent e) {
+	}
+	public void mouseMoved(MouseEvent e) {
+	}
 }
