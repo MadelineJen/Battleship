@@ -63,24 +63,30 @@ class Grids extends RectangleCanvas implements KeyListener {
 		final int endColX = 100;
 		final int endColY = 600;
 
-		final Color GridColor = Color.BLACK;
-
-		for (int i = 0; i < rows; i++) {
-			g.setColor(GridColor);
+		 final Color GridColor = Color.BLACK;
+		//Create the grids (row diviser lines--horizontal)
+			for (int i=0; i<rows; i++) {
+           	g.setColor(GridColor);
+			//New variables
 			int NewStartY = startRowY + i * cellSize;
-			int NewEndY = endRowY + i * cellSize;
+			int NewEndY = endRowY + i*cellSize;
+			//g.drawLine(x,y,x,y);    		
 			g.drawLine(startRowX, NewStartY, endRowX, NewEndY);
+			System.out.println("ROW NEW STAARTY"+NewStartY+"STARTX"+startRowX);
+			System.out.println("ROW NEW ENDY"+endRowX+"ENDX"+NewEndY);
 		}
-
-		for (int i = 0; i < columns; i++) {
-			g.setColor(GridColor);
+		//Create the grids (column diviser lines-- vertical)
+		for (int i=0; i<columns; i++) {
+           g.setColor(GridColor);
+			System.out.println("HAPPENING:");
+			//New variables
 			int NewStartX = startColX + i * cellSize;
-			int NewEndX = endColX + i * cellSize;
+			int NewEndX = endColX + i*cellSize;
+			//g.drawLine(x,y,x,y);    		
 			g.drawLine(NewStartX, startColY, NewEndX, endColY);
 		}
-
-		// Iterate through rectangles and calculate center coordinates
-		for (Rectangle rect : rectangles) {
+	}
+		for (Rectangle rect : rectangles) { // Iterate through rectangles and calculate center coordinates
 			int centerX = rect.x + rect.width / 2;
 			int centerY = rect.y + rect.height / 2;
 
