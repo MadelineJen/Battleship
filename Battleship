@@ -106,8 +106,7 @@ class Grids extends RectangleCanvas implements KeyListener {
 		}
 	}
 
-	// Add a method to get the center coordinates ArrayList
-	public List<Integer[]> getCenterCoordinates() {
+	public List<Integer[]> getCenterCoordinates() { // Add a method to get the center coordinates ArrayList
 		return centerCoordinates;
 	}
 }
