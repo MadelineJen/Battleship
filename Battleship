@@ -73,12 +73,6 @@ class Grids extends RectangleCanvas implements KeyListener {
 		final int endColY = 600;
 		
 	    final Color GridColor = Color.BLACK;
-		
-		
-
-
-
-
 
 		//Create the grids (row diviser lines--horizontal)
 		for (int i=0; i<rows; i++) {
@@ -91,11 +85,8 @@ class Grids extends RectangleCanvas implements KeyListener {
 			//g.drawLine(x,y,x,y);    		
 			g.drawLine(startRowX, NewStartY, endRowX, NewEndY);
 
-
 			System.out.println("ROW NEW STAARTY"+NewStartY+"STARTX"+startRowX);
 			System.out.println("ROW NEW ENDY"+endRowX+"ENDX"+NewEndY);
-
-
 
 		}
 
