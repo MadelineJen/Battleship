@@ -35,6 +35,7 @@ class Grids extends RectangleCanvas implements KeyListener {
 		super();
 		setFocusable(true);  
 		addKeyListener(this); // Add KeyListener to the panel
+		private List<Integer[]> centerCoordinates = new ArrayList<>();
 	}
 
 	static final int rows = 11;
