@@ -24,7 +24,7 @@ public class Battleship {
 		Grids grid = new Grids();
 		frame.add(canvas);
 		frame.add(grid);
-		frame.setSize(900, 1000); //please choose a size for the frame
+		frame.setSize(650, 650); //please choose a size for the frame
 		frame.addKeyListener(grid);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
@@ -123,6 +123,9 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
     private int otherX, otherY;
     private int clickCount = 0;
     private int gridSize = 50; // Size of each grid square
+    private int gridWidth = 12;  // Number of grid squares in the x-direction
+    private int gridHeight = 12; // Number of grid squares in the y-direction
+
 
     public RectangleCanvas() {
         setBackground(Color.BLUE);
@@ -137,6 +140,15 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
             int y = (e.getY() / gridSize) * gridSize;
             int width = (clickCount + 1) * gridSize;
             int height = gridSize;
+
+            // Ensure the rectangle stays within the grid boundaries
+            if (x + width > gridWidth * gridSize) {
+                x = (gridWidth - (clickCount + 1)) * gridSize;
+            }
+            if (y + height > gridHeight * gridSize) {
+                y = (gridHeight - 1) * gridSize;
+            }
+
             Rectangle newRect = new Rectangle(x, y, width, height);
             rectangles.add(newRect);
             clickCount++;
@@ -144,6 +156,25 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
         }
     }
 
+    public void mouseDragged(MouseEvent e) {
+        if (currentDraggedRectangle != null) {
+            int x = e.getX();
+            int y = e.getY();
+            int gridX = (x / gridSize) * gridSize;
+            int gridY = (y / gridSize) * gridSize;
+
+            // Ensure the rectangle stays within the grid boundaries
+            if (gridX + currentDraggedRectangle.width > gridWidth * gridSize) {
+                gridX = (gridWidth - currentDraggedRectangle.width / gridSize) * gridSize;
+            }
+            if (gridY + currentDraggedRectangle.height > gridHeight * gridSize) {
+                gridY = (gridHeight - currentDraggedRectangle.height / gridSize) * gridSize;
+            }
+
+            currentDraggedRectangle.setLocation(gridX, gridY);
+            repaint();
+        }
+    }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         for (Rectangle rect : rectangles) {
@@ -169,16 +200,6 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
         currentDraggedRectangle = null;
     }
 
-    public void mouseDragged(MouseEvent e) {
-        if (currentDraggedRectangle != null) {
-            int x = e.getX();
-            int y = e.getY();
-            int gridX = ((x / gridSize) * gridSize);
-            int gridY = ((y / gridSize) * gridSize);
-            currentDraggedRectangle.setLocation(gridX, gridY);
-            repaint();
-        }
-    }
 
     public void mouseEntered(MouseEvent e) {
     }
