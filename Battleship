@@ -39,10 +39,18 @@ class Grids extends RectangleCanvas implements KeyListener {
 		addKeyListener(this); // Add KeyListener to the panel
 	}
 
-	@Override
+	@Override //OverRide paint component to create grid
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
+		/*
+		//Get frame widths
+		int width = getSize().width;
+		width = width/13;
+		System.out.println("WIDTH"+width);
+       int height = getSize().height;
+       height = height/13;
+		 */
+		//Variables
 		final int rows = 11;
 		final int columns = 11;
 		final int startRowX = 50;
