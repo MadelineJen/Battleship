@@ -30,7 +30,7 @@ public class Battleship {
 		frame.setVisible(true);
 	}
 }
-public class Grids extends RectangleCanvas implements KeyListener {
+class Grids extends RectangleCanvas implements KeyListener {
     private List<Integer[]> centerCoordinates = new ArrayList<>();
 
     public Grids() {
