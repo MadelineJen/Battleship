@@ -1,4 +1,9 @@
-
+/*
+Madeline Jen
+Anela Takiguci
+Ana Luciano
+Battleship Game Project
+ */
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.Graphics;
@@ -152,12 +157,25 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
             }
 
             Rectangle newRect = new Rectangle(x, y, width, height);
-            rectangles.add(newRect);
-            clickCount++;
-            repaint();
+
+            // Check for overlap with existing rectangles
+            boolean overlap = false;
+            for (Rectangle existingRect : rectangles) {
+                if (newRect.intersects(existingRect)) {
+                    overlap = true;
+                    break;
+                }
+            }
+
+            // Add the new rectangle only if there is no overlap
+            if (!overlap) {
+                rectangles.add(newRect);
+                clickCount++;
+                repaint();
+            }
         }
     }
-
+    
     public void mouseDragged(MouseEvent e) {
         if (currentDraggedRectangle != null) {
             int x = e.getX();
@@ -173,15 +191,25 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
                 gridY = (gridHeight - currentDraggedRectangle.height / gridSize) * gridSize;
             }
 
-            currentDraggedRectangle.setLocation(gridX, gridY);
-            repaint();
-            if (isRotateKeyPressed(e)) {
-                int temp = currentDraggedRectangle.width;
-                currentDraggedRectangle.width = currentDraggedRectangle.height;
-                currentDraggedRectangle.height = temp;
+            // Check for collision with existing rectangles
+            boolean collision = false;
+            for (Rectangle rect : rectangles) {
+                if (rect != currentDraggedRectangle && rect.intersects(new Rectangle(gridX, gridY, currentDraggedRectangle.width, currentDraggedRectangle.height))) {
+                    collision = true;
+                    break;
+                }
             }
 
-            repaint();
+            // If there is no collision, update the position
+            if (!collision) {
+                currentDraggedRectangle.setLocation(gridX, gridY);
+                repaint();
+                if (isRotateKeyPressed(e)) {
+                    int temp = currentDraggedRectangle.width;
+                    currentDraggedRectangle.width = currentDraggedRectangle.height;
+                    currentDraggedRectangle.height = temp;
+                }
+            }
         }
     }
   
