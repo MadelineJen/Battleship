@@ -1,45 +1,50 @@
-/*
-Madeline Jen
-Anela Takiguci
-Ana Luciano
-Battleship Game Project
- */
+
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.Graphics;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Rectangle;
-
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import javax.swing.JButton;
+
 public class Battleship {
-	public static void main (String[] args){
-		JFrame frame = new JFrame("Battleship Game");
-		RectangleCanvas canvas = new RectangleCanvas();
-		JButton confirm = new JButton("Confirm");
-		Grids grid = new Grids();
-		frame.add(canvas);
-		frame.add(grid);
-		frame.setSize(650, 650); //please choose a size for the frame
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
-	}
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Battleship Game");
+        RectangleCanvas canvas = new RectangleCanvas();
+        Grids grid = new Grids(canvas); // Pass the canvas reference to Grids
+        JButton confirmButton = new JButton("Confirm");
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(confirmButton);
+        buttonPanel.setBackground(Color.BLUE);
+        frame.setLayout(new BorderLayout());
+        frame.add(buttonPanel, BorderLayout.NORTH);
+        frame.add(canvas);
+        frame.add(grid);
+        frame.setSize(650, 700);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
 }
+
 class Grids extends RectangleCanvas {
     private List<Integer[]> centerCoordinates = new ArrayList<>();
+    
 
-    public Grids() {
+    public Grids(RectangleCanvas canvas) {
         super();
         setFocusable(true);
+ 
     }
 
     @Override
-    // OverRide paint component to create grid
+    // Override paint component to create grid
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -98,10 +103,10 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
     private int otherX, otherY;
     private int clickCount = 0;
     private int gridSize = 50; // Size of each grid square
-    private int gridWidth = 12;  // Number of grid squares in the x-direction
+    private int gridWidth = 12; // Number of grid squares in the x-direction
     private int gridHeight = 12; // Number of grid squares in the y-direction
-
-
+    private boolean isDraggable = true;
+    
     public RectangleCanvas() {
         setBackground(Color.BLUE);
         addMouseListener(this);
@@ -109,8 +114,30 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
         setFocusable(true);
     }
 
+    public void setDraggable(boolean draggable) {
+        isDraggable = draggable;
+    }
+
+    public void mousePressed(MouseEvent e) {
+        if (isDraggable) {
+            int x = e.getX();
+            int y = e.getY();
+            for (Rectangle rect : rectangles) {
+                if (rect.contains(x, y)) {
+                    currentDraggedRectangle = rect;
+                    otherX = x - rect.x;
+                    otherY = y - rect.y;
+                    break;
+                }
+            }
+        }
+    }
+
+    public void mouseReleased(MouseEvent e) {
+        }
+
     public void mouseClicked(MouseEvent e) {
-        if (clickCount < 4) {
+        if (isDraggable && clickCount < 4) {
             int x = (e.getX() / gridSize) * gridSize;
             int y = (e.getY() / gridSize) * gridSize;
             int width = (clickCount + 1) * gridSize;
@@ -155,44 +182,26 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
             }
 
             repaint();
-            
         }
     }
-
-    private boolean isRotateKeyPressed(MouseEvent e) {
-        return e.isShiftDown();
-    }
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        for (Rectangle rect : rectangles) {
-            g.setColor(RectColor);
-            g.fillRect(rect.x, rect.y, rect.width, rect.height);
+  
+        private boolean isRotateKeyPressed(MouseEvent e) {
+        	return e.isShiftDown();
         }
-    }
-    
-    public void mousePressed(MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY();
-        for (Rectangle rect : rectangles) {
-            if (rect.contains(x, y)) {
-                currentDraggedRectangle = rect;
-                otherX = x - rect.x;
-                otherY = y - rect.y;
-                break;
-            }
+        public void paintComponent(Graphics g) {
+        	super.paintComponent(g);
+        	for (Rectangle rect : rectangles) {
+        		g.setColor(RectColor);
+        		g.fillRect(rect.x, rect.y, rect.width, rect.height);
+        	}
         }
-    }
+        
+        public void mouseEntered(MouseEvent e) {
+        }
 
-    public void mouseReleased(MouseEvent e) {
-    }
+        public void mouseExited(MouseEvent e) {
+        }
 
-
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    public void mouseExited(MouseEvent e) {
-    }
-
-    public void mouseMoved(MouseEvent e) {
-    }
+        public void mouseMoved(MouseEvent e) {
+        }
 }
