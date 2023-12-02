@@ -1,0 +1,91 @@
+//Import
+import java.util.List;
+import java.util.ArrayList;
+import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+
+
+//Class
+public class Admiral_Purtee {
+
+
+	//Instance variables
+	int rows = 10;
+	int columns = 10;
+	int startRX = 100; //x coordinate of startColX
+	int startCY = 100; //y cooridnate of startRowY
+	int cellSize = 50;
+	
+	//Finding first place
+	int startPlacex = startRX + (cellSize / 2);
+	int startPlacey = startCY + (cellSize/2);
+	
+	
+	
+	//Create arraylist
+	//ArrayList<ArrayList<Integer>> gridPoints = new ArrayList<ArrayList<Integer>>();
+	ArrayList<ArrayList<ArrayList<Integer>>> gridPoints = new ArrayList<ArrayList<ArrayList<Integer>>>();
+
+	
+	//Constructions w/ parameters
+	Admiral_Purtee(int rows, int columns, int startRX, int startCY, int cellSize){
+		this.rows = rows;
+		this.columns = columns;
+		this.startRX = startRX;
+		this.startCY = startCY;
+		this.cellSize = cellSize;
+		this.gridPoints = gridPoints;
+	}
+	
+	//Method for calculating out 
+	public void points() {
+		//Calculate out the points of grid
+		for (int i=0; i< (rows); i++) {
+			
+			//Add array 
+			ArrayList<ArrayList<Integer>> rowEach = new ArrayList<ArrayList<Integer>>();
+			gridPoints.add(rowEach);
+			
+			//For every row, y coordinate changes
+			startPlacey = startPlacey + cellSize*i;
+			
+			//Go through columns
+			for(int j=0; j<(columns); j++) {
+				
+				//Add arraylist 
+				ArrayList<Integer> coordinatesEach = new ArrayList<Integer>();
+				gridPoints.get(i).add(j, coordinatesEach);
+				
+				
+				//For every column, x coordinate changes
+				startPlacex = startPlacex + cellSize*j;
+				
+				//Add to array 
+				gridPoints.get(i).get(j).add(0, startPlacex);
+				gridPoints.get(i).get(j).add(1, startPlacey);
+
+				
+				
+			}	
+		}
+		
+		System.out.println(gridPoints);
+
+	}
+	
+	public static void main(String[] args) {
+		Admiral_Purtee a = new Admiral_Purtee(10,10,100,100,50);
+		a.points();
+	  }
+	
+
+}
