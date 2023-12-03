@@ -3,12 +3,7 @@ Madeline Jen
 Anela Takiguci
 Ana Luciano
 Battleship Game Project
- *//*
-Madeline Jen
-Anela Takiguci
-Ana Luciano
-Battleship Game Project
-  */
+ */
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.Graphics;
@@ -61,7 +56,7 @@ public class Battleship {
 class Circles {
 
 	public static void main(String[] args) {
-		JFrame frame = new JFrame("Connect The Dots");
+		JFrame frame = new JFrame();
 
 		CircleCanvas canvas = new CircleCanvas();
 		frame.add(canvas);
