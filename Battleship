@@ -183,12 +183,21 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
             int gridX = (x / gridSize) * gridSize;
             int gridY = (y / gridSize) * gridSize;
 
-            // Ensures that the rectangle stays within the grid boundaries
-            if (gridX + currentDraggedRectangle.width > gridWidth * gridSize) {
-                gridX = (gridWidth - currentDraggedRectangle.width / gridSize) * gridSize;
+            // Ensure that the rectangle stays within the grid boundaries
+            if (gridX < 50 || gridY < 50) {
+                // Prevent dragging beyond the first column or row
+                return;
             }
-            if (gridY + currentDraggedRectangle.height > gridHeight * gridSize) {
-                gridY = (gridHeight - currentDraggedRectangle.height / gridSize) * gridSize;
+
+            // Ensure that the rectangle stays within the drawn grid boundaries
+            int lastDrawnLineX = (gridWidth) * gridSize;
+            int lastDrawnLineY = (gridHeight) * gridSize;
+
+            if (gridX + currentDraggedRectangle.width > lastDrawnLineX) {
+                gridX = lastDrawnLineX - currentDraggedRectangle.width;
+            }
+            if (gridY + currentDraggedRectangle.height > lastDrawnLineY) {
+                gridY = lastDrawnLineY - currentDraggedRectangle.height;
             }
 
             // Check for collision with existing rectangles
