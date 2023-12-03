@@ -16,229 +16,313 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 
 public class Battleship {
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Battleship Game");
-        RectangleCanvas canvas = new RectangleCanvas();
-        Grids grid = new Grids(canvas); // Pass the canvas reference to Grids
-        JButton confirmButton = new JButton("Confirm");
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(confirmButton);
-        buttonPanel.setBackground(Color.BLUE);
-        frame.setLayout(new BorderLayout());
-        frame.add(buttonPanel, BorderLayout.NORTH);
-        frame.add(canvas);
-        frame.add(grid);
-        frame.setSize(650, 700);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-    }
+	public static void main(String[] args) {
+		JFrame frame = new JFrame("Battleship Game");
+		RectangleCanvas canvas = new RectangleCanvas();
+
+		Grids grid = new Grids(canvas); // Pass the canvas reference to Grids
+		JButton confirmButton = new JButton("Confirm");
+
+		confirmButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				DrawingPanel drawingPanel = new DrawingPanel();
+				frame.getContentPane().removeAll(); // Remove existing components
+				frame.add(drawingPanel, BorderLayout.CENTER);
+				frame.revalidate();
+				frame.repaint();
+				drawingPanel.requestFocusInWindow();
+			}
+		});
+
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.add(confirmButton);
+		buttonPanel.setBackground(Color.BLUE);
+		frame.setLayout(new BorderLayout());
+		frame.add(buttonPanel, BorderLayout.NORTH);
+		frame.add(canvas, BorderLayout.CENTER);
+		frame.add(grid);
+		frame.setSize(650, 700);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+	}
+}
+
+class DrawingPanel extends JPanel implements MouseListener, MouseMotionListener, KeyListener {
+	private ArrayList<MyCircle> circles = new ArrayList<>();
+	private Color circleColor = Color.WHITE;
+	
+	public DrawingPanel() {
+		setBackground(Color.BLUE);
+		addMouseListener(this);
+		addMouseMotionListener(this);
+		addKeyListener(this);
+		setFocusable(true);
+	}
+	
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		
+		for (int i = 1; i < circles.size(); i++) {
+			MyCircle circle = circles.get(i);
+			MyCircle prevCircle = circles.get(i - 1);
+		}
+			for(MyCircle d : circles) {
+				g.setColor(d.circleColor);
+				int r = 50;
+				g.fillOval(d.x - r / 2, d.y - r / 2, r, r);
+
+			}
+			
+			repaint();
+
+		}
+
+	@Override
+	public void keyTyped(KeyEvent e) {}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if(e.getKeyChar() == 'r') {
+			circleColor = Color.RED;
+		} else if(e.getKeyChar() == 'w') {
+			circleColor = Color.WHITE;
+		} else { 
+			System.out.println("Pressed an odd letter: " + e);
+		}
+		repaint(); 		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {}
+	@Override
+	public void mouseDragged(MouseEvent e) {}
+	@Override
+	public void mouseMoved(MouseEvent e) {}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		int r = 50;  
+		int x1 = e.getX();
+		int y1 = e.getY(); 
+		System.out.println("Click detected at: (" + x1 + "," + y1 + ").");
+		circles.add(new MyCircle(e.getX(), e.getY(), r, circleColor));
+		repaint();
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+
+	@Override
+	public void mouseExited(MouseEvent e) {}
 }
 
 class Grids extends RectangleCanvas {
-    private List<Integer[]> centerCoordinates = new ArrayList<>();
-    
+	private List<Integer[]> centerCoordinates = new ArrayList<>();
 
-    public Grids(RectangleCanvas canvas) {
-        super();
-        setFocusable(true);
- 
-    }
 
-    @Override
-    // Override paint component to create grid
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+	public Grids(RectangleCanvas canvas) {
+		super();
+		setFocusable(true);
 
-        // Variables
-        final int rows = 11;
-        final int columns = 11;
-        final int startRowX = 50;
-        final int startRowY = 100;
-        final int startColX = 100;
-        final int startColY = 50;
-        final int cellSize = 50;
-        final int endRowX = 600;
-        final int endRowY = 100;
-        final int endColX = 100;
-        final int endColY = 600;
+	}
 
-        final Color GridColor = Color.BLACK;
+	@Override
+	// Override paint component to create grid
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 
-        // Creates the grids (row divider lines--horizontal)
-        for (int i = 0; i < rows; i++) {
-            g.setColor(GridColor);
-            int NewStartY = startRowY + i * cellSize;
-            int NewEndY = endRowY + i * cellSize;
-            g.drawLine(startRowX, NewStartY, endRowX, NewEndY);
-        }
+		// Variables
+		final int rows = 11;
+		final int columns = 11;
+		final int startRowX = 50;
+		final int startRowY = 100;
+		final int startColX = 100;
+		final int startColY = 50;
+		final int cellSize = 50;
+		final int endRowX = 600;
+		final int endRowY = 100;
+		final int endColX = 100;
+		final int endColY = 600;
 
-        // Creates the grids (column divider lines-- vertical)
-        for (int i = 0; i < columns; i++) {
-            g.setColor(GridColor);
-            int NewStartX = startColX + i * cellSize;
-            int NewEndX = endColX + i * cellSize;
-            g.drawLine(NewStartX, startColY, NewEndX, endColY);
-        }
+		final Color GridColor = Color.BLACK;
 
-        // Iterates through rectangles and calculate center coordinates
-        for (Rectangle rect : rectangles) {
-            int centerX = rect.x + rect.width / 2;
-            int centerY = rect.y + rect.height / 2;
+		// Creates the grids (row divider lines--horizontal)
+		for (int i = 0; i < rows; i++) {
+			g.setColor(GridColor);
+			int NewStartY = startRowY + i * cellSize;
+			int NewEndY = endRowY + i * cellSize;
+			g.drawLine(startRowX, NewStartY, endRowX, NewEndY);
+		}
 
-            // Stores the center coordinates in the ArrayList
-            Integer[] center = { centerX, centerY };
-            centerCoordinates.add(center);
-        }
-    }
+		// Creates the grids (column divider lines-- vertical)
+		for (int i = 0; i < columns; i++) {
+			g.setColor(GridColor);
+			int NewStartX = startColX + i * cellSize;
+			int NewEndX = endColX + i * cellSize;
+			g.drawLine(NewStartX, startColY, NewEndX, endColY);
+		}
 
-    // Added a method to get the center coordinates ArrayList
-    public List<Integer[]> getCenterCoordinates() {
-        return centerCoordinates;
-    }
+		// Iterates through rectangles and calculate center coordinates
+		for (Rectangle rect : rectangles) {
+			int centerX = rect.x + rect.width / 2;
+			int centerY = rect.y + rect.height / 2;
+
+			// Stores the center coordinates in the ArrayList
+			Integer[] center = { centerX, centerY };
+			centerCoordinates.add(center);
+		}
+	}
+
+	// Added a method to get the center coordinates ArrayList
+	public List<Integer[]> getCenterCoordinates() {
+		return centerCoordinates;
+	}
 }
 
 class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListener {
-    private Color RectColor = Color.MAGENTA;
-    protected ArrayList<Rectangle> rectangles = new ArrayList<>();
-    private Rectangle currentDraggedRectangle = null;
-    private int otherX, otherY;
-    private int clickCount = 0;
-    private int gridSize = 50; // Size of each grid square
-    private int gridWidth = 12; // Number of grid squares in the x-direction
-    private int gridHeight = 12; // Number of grid squares in the y-direction
-    private boolean isDraggable = true;
-    
-    public RectangleCanvas() {
-        setBackground(Color.BLUE);
-        addMouseListener(this);
-        addMouseMotionListener(this);
-        setFocusable(true);
-    }
+	private Color RectColor = Color.MAGENTA;
+	protected ArrayList<Rectangle> rectangles = new ArrayList<>();
+	private Rectangle currentDraggedRectangle = null;
+	private int otherX, otherY;
+	private int clickCount = 0;
+	private int gridSize = 50; // Size of each grid square
+	private int gridWidth = 12; // Number of grid squares in the x-direction
+	private int gridHeight = 12; // Number of grid squares in the y-direction
+	private boolean isDraggable = true;
 
-    public void setDraggable(boolean draggable) {
-        isDraggable = draggable;
-    }
+	public RectangleCanvas() {
+		setBackground(Color.BLUE);
+		addMouseListener(this);
+		addMouseMotionListener(this);
+		setFocusable(true);
+	}
 
-    public void mousePressed(MouseEvent e) {
-        if (isDraggable) {
-            int x = e.getX();
-            int y = e.getY();
-            for (Rectangle rect : rectangles) {
-                if (rect.contains(x, y)) {
-                    currentDraggedRectangle = rect;
-                    otherX = x - rect.x;
-                    otherY = y - rect.y;
-                    break;
-                }
-            }
-        }
-    }
+	public void setDraggable(boolean draggable) {
+		isDraggable = draggable;
+	}
 
-    public void mouseReleased(MouseEvent e) {
-        }
+	public void mousePressed(MouseEvent e) {
+		if (isDraggable) {
+			int x = e.getX();
+			int y = e.getY();
+			for (Rectangle rect : rectangles) {
+				if (rect.contains(x, y)) {
+					currentDraggedRectangle = rect;
+					otherX = x - rect.x;
+					otherY = y - rect.y;
+					break;
+				}
+			}
+		}
+	}
 
-    public void mouseClicked(MouseEvent e) {
-        if (isDraggable && clickCount < 4) {
-            int x = (e.getX() / gridSize) * gridSize;
-            int y = (e.getY() / gridSize) * gridSize;
-            int width = (clickCount + 1) * gridSize;
-            int height = gridSize;
+	public void mouseReleased(MouseEvent e) {
+	}
 
-            // Ensures that the rectangle stays within the grid boundaries
-            if (x + width > gridWidth * gridSize) {
-                x = (gridWidth - (clickCount + 1)) * gridSize;
-            }
-            if (y + height > gridHeight * gridSize) {
-                y = (gridHeight - 1) * gridSize;
-            }
+	public void mouseClicked(MouseEvent e) {
+		if (isDraggable && clickCount < 4) {
+			int x = (e.getX() / gridSize) * gridSize;
+			int y = (e.getY() / gridSize) * gridSize;
+			int width = (clickCount + 1) * gridSize;
+			int height = gridSize;
 
-            Rectangle newRect = new Rectangle(x, y, width, height);
+			// Ensures that the rectangle stays within the grid boundaries
+			if (x + width > gridWidth * gridSize) {
+				x = (gridWidth - (clickCount + 1)) * gridSize;
+			}
+			if (y + height > gridHeight * gridSize) {
+				y = (gridHeight - 1) * gridSize;
+			}
 
-            // Check for overlap with existing rectangles
-            boolean overlap = false;
-            for (Rectangle existingRect : rectangles) {
-                if (newRect.intersects(existingRect)) {
-                    overlap = true;
-                    break;
-                }
-            }
+			Rectangle newRect = new Rectangle(x, y, width, height);
 
-            // Add the new rectangle only if there is no overlap
-            if (!overlap) {
-                rectangles.add(newRect);
-                clickCount++;
-                repaint();
-            }
-        }
-    }
-    
-    public void mouseDragged(MouseEvent e) {
-        if (currentDraggedRectangle != null) {
-            int x = e.getX();
-            int y = e.getY();
-            int gridX = (x / gridSize) * gridSize;
-            int gridY = (y / gridSize) * gridSize;
+			// Check for overlap with existing rectangles
+			boolean overlap = false;
+			for (Rectangle existingRect : rectangles) {
+				if (newRect.intersects(existingRect)) {
+					overlap = true;
+					break;
+				}
+			}
 
-            // Ensure that the rectangle stays within the grid boundaries
-            if (gridX < 50 || gridY < 50) {
-                // Prevent dragging beyond the first column or row
-                return;
-            }
+			// Add the new rectangle only if there is no overlap
+			if (!overlap) {
+				rectangles.add(newRect);
+				clickCount++;
+				repaint();
+			}
+		}
+	}
 
-            // Ensure that the rectangle stays within the drawn grid boundaries
-            int lastDrawnLineX = (gridWidth) * gridSize;
-            int lastDrawnLineY = (gridHeight) * gridSize;
+	public void mouseDragged(MouseEvent e) {
+		if (currentDraggedRectangle != null) {
+			int x = e.getX();
+			int y = e.getY();
+			int gridX = (x / gridSize) * gridSize;
+			int gridY = (y / gridSize) * gridSize;
 
-            if (gridX + currentDraggedRectangle.width > lastDrawnLineX) {
-                gridX = lastDrawnLineX - currentDraggedRectangle.width;
-            }
-            if (gridY + currentDraggedRectangle.height > lastDrawnLineY) {
-                gridY = lastDrawnLineY - currentDraggedRectangle.height;
-            }
+			// Ensures that the rectangle stays within the grid boundaries
+			if (gridX + currentDraggedRectangle.width > gridWidth * gridSize) {
+				gridX = (gridWidth - currentDraggedRectangle.width / gridSize) * gridSize;
+			}
+			if (gridY + currentDraggedRectangle.height > gridHeight * gridSize) {
+				gridY = (gridHeight - currentDraggedRectangle.height / gridSize) * gridSize;
+			}
 
-            // Check for collision with existing rectangles
-            boolean collision = false;
-            for (Rectangle rect : rectangles) {
-                if (rect != currentDraggedRectangle && rect.intersects(new Rectangle(gridX, gridY, currentDraggedRectangle.width, currentDraggedRectangle.height))) {
-                    collision = true;
-                    break;
-                }
-            }
+			// Check for collision with existing rectangles
+			boolean collision = false;
+			for (Rectangle rect : rectangles) {
+				if (rect != currentDraggedRectangle && rect.intersects(new Rectangle(gridX, gridY, currentDraggedRectangle.width, currentDraggedRectangle.height))) {
+					collision = true;
+					break;
+				}
+			}
 
-            // If there is no collision, update the position
-            if (!collision) {
-                currentDraggedRectangle.setLocation(gridX, gridY);
-                repaint();
-                if (isRotateKeyPressed(e)) {
-                    int temp = currentDraggedRectangle.width;
-                    currentDraggedRectangle.width = currentDraggedRectangle.height;
-                    currentDraggedRectangle.height = temp;
-                }
-            }
-        }
-    }
-  
-        private boolean isRotateKeyPressed(MouseEvent e) {
-        	return e.isShiftDown();
-        }
-        public void paintComponent(Graphics g) {
-        	super.paintComponent(g);
-        	for (Rectangle rect : rectangles) {
-        		g.setColor(RectColor);
-        		g.fillRect(rect.x, rect.y, rect.width, rect.height);
-        	}
-        }
-        
-        public void mouseEntered(MouseEvent e) {
-        }
+			// If there is no collision, update the position
+			if (!collision) {
+				currentDraggedRectangle.setLocation(gridX, gridY);
+				repaint();
+				if (isRotateKeyPressed(e)) {
+					int temp = currentDraggedRectangle.width;
+					currentDraggedRectangle.width = currentDraggedRectangle.height;
+					currentDraggedRectangle.height = temp;
+				}
+			}
+		}
+	}
 
-        public void mouseExited(MouseEvent e) {
-        }
+	private boolean isRotateKeyPressed(MouseEvent e) {
+		return e.isShiftDown();
+	}
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		for (Rectangle rect : rectangles) {
+			g.setColor(RectColor);
+			g.fillRect(rect.x, rect.y, rect.width, rect.height);
+		}
+	}
 
-        public void mouseMoved(MouseEvent e) {
-        }
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	public void mouseExited(MouseEvent e) {
+	}
+
+	public void mouseMoved(MouseEvent e) {
+	}
 }
