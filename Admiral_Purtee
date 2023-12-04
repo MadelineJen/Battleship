@@ -199,14 +199,85 @@ public class Admiral_Purtee {
 			}
 			
 			//If one, vertical 
-			if (hORv == 1) {
+			else if (hORv == 1) {
 				System.out.println("Vertical happening: "+ab);
+
+				//While loop to make sure no overlap 
+				boolean check = false;
 				
-				//find which rows
-				int rowGuess = rand.nextInt(rows-(ab-1));
+				while (check == false) {
+										
+					boolean overlapped = false;
+					
+					System.out.println("got new value "+overlapped);
+
+
+					//find which rows
+					int rowGuess2 = rand.nextInt(rows-(ab-1));
+
+					
+					//find which column to start with 
+					int columnGuess2 = rand.nextInt(columns);
+
+					
+					// add the two values to arraylist (first point ship)
+					if (checkOverlap.isEmpty() == true) {
+						System.out.println("Happened, okay");
+						rowGuess = rowGuess2;
+						columnGuess = columnGuess2; 
+						ArrayList<Integer> placePoit = new ArrayList<Integer>();
+						placePoit.add(rowGuess2);
+						placePoit.add(columnGuess2);
+						checkOverlap.add(placePoit);
+						break;
+					}
+					
+					else {
+						
+						int shipLength = ab;
+						
+						while (shipLength > 0) {
+							shipLength = shipLength - 1;
+							
+							//if overlapped, continue on 
+							if (overlapped==true) {
+								break;
+							}
+							
+							for (ArrayList<Integer> ints : checkOverlap) {
+								System.out.println("HWOEIRJWELR");
+								
+								if (ints.get(0) == rowGuess2+shipLength && ints.get(1)== columnGuess2) {
+									System.out.println("Happened");
+									overlapped = true;
+									break;
+									
+								}
+							}
+						}
+						
+						
+						//If overlapped, continue to get new value
+						if (overlapped==true) {
+							System.out.println("Continued properly");
+							continue;
+						}
+						
+						
+						else {
+							//if not overlaped, add to list 
+							System.out.println("Continued on");
+							ArrayList<Integer> placePoit = new ArrayList<Integer>();
+							rowGuess = rowGuess2;
+							columnGuess = columnGuess2; 
+							placePoit.add(rowGuess);
+							placePoit.add(columnGuess);
+							break;
+							
+						}
+					}
+				}
 				
-				//find which column to start with 
-				int columnGuess = rand.nextInt(columns);
 				
 				//Continue for how many ship length 
 				while (countLoop > 0) {
