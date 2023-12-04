@@ -1,4 +1,406 @@
 
+import java.util.List;
+import java.util.ArrayList;
+import java.awt.Graphics;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Rectangle;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import javax.swing.JButton;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
+public class Battleship {
+	public static void main(String[] args) {
+		JFrame frame = new JFrame("Battleship Game");
+		RectangleCanvas canvas = new RectangleCanvas();
+
+		Grids grid = new Grids(canvas); // Pass the canvas reference to Grids
+		JButton confirmButton = new JButton("Confirm");
+
+		confirmButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				DrawingPanel drawingPanel = new DrawingPanel();
+				frame.getContentPane().removeAll(); // Remove existing components
+				frame.add(drawingPanel, BorderLayout.CENTER);
+				frame.revalidate();
+				frame.repaint();
+				drawingPanel.requestFocusInWindow();
+			}
+		});
+
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.add(confirmButton);
+		buttonPanel.setBackground(Color.BLUE);
+		frame.setLayout(new BorderLayout());
+		
+		 // Create an ImageIcon with your image file path
+        ImageIcon icon = new ImageIcon("C:\\Users\\madel\\Pictures\\Screenshots\\Screenshot 2023-12-03 204713.jpg");
+        JLabel imageLabel = new JLabel(icon);
+        frame.add(imageLabel, BorderLayout.SOUTH);
+		frame.add(buttonPanel, BorderLayout.NORTH);
+		frame.add(canvas, BorderLayout.CENTER);
+		frame.add(grid);
+		frame.setSize(620, 800);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+	}
+}
+
+class Circles {
+
+	public static void main(String[] args) {
+		JFrame frame = new JFrame();
+
+		CircleCanvas canvas = new CircleCanvas();
+		frame.add(canvas);
+		frame.setSize(620, 800);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+	}
+}
+
+class MyCircle {
+	int x, y, r;
+	Color circleColor;
+
+	public MyCircle(int x, int y, int r, Color c) {
+		this.x = x;
+		this.y = y;
+		this.r = r;
+		this.circleColor = c;
+	}
+
+	public void setLocation(int x2, int y2) {
+		this.x = x2;
+		this.y = y2;
+	}
+
+	public boolean intersects(MyCircle other) {
+	    return this.x == other.x && this.y == other.y;
+	}
+}
+
+class CircleCanvas extends JPanel implements MouseListener{
+
+    private ArrayList<MyCircle> circles = new ArrayList<>();
+    private Color circleColor = Color.WHITE;
+    
+    public CircleCanvas() {
+        setBackground(Color.BLUE);
+        addMouseListener(this);
+        setFocusable(true);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        for (MyCircle d : circles) {
+            g.setColor(d.circleColor);
+            int r = 30;
+            g.fillOval(d.x - r / 2, d.y - r / 2, r, r);
+        }
+    }
+    @Override
+    public void mouseClicked(MouseEvent e) {
+    }
+    
+	public void mousePressed(MouseEvent e) {
+	}
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+	}
+	
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+	
+	@Override
+	public void mouseExited(MouseEvent e) {
+	}
+}
+class DrawingPanel extends JPanel implements MouseListener, KeyListener {
+    private ArrayList<MyCircle> circles = new ArrayList<>();
+    private Color circleColor = Color.WHITE;
+    private int clickCount = 0;
+    private boolean player = true;
+    private int gridSize = 50; // Size of each grid square
+    final int rows = 11;
+    final int columns = 11;
+    final int startRowX = 50;
+    final int startRowY = 100;
+    final int startColX = 100;
+    final int startColY = 50;
+    final int cellSize = 50;
+    final int endRowX = 600;
+    final int endRowY = 100;
+    final int endColX = 100;
+    final int endColY = 600;
+    final Color GridColor = Color.BLACK;
+
+    public DrawingPanel() {
+        setBackground(Color.BLUE);
+        addMouseListener(this);
+        addKeyListener(this);
+        setFocusable(true);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        // Draw grid with row and column numbers
+        for (int i = -1; i < rows-1; i++) {
+            int NewStartY = startRowY + i * cellSize;
+            int NewEndY = endRowY + i * cellSize;
+            g.setColor(GridColor);
+            g.drawLine(startRowX, NewStartY, endRowX, NewEndY);
+
+            // Draw row numbers
+            g.setColor(Color.WHITE);
+            g.drawString(Integer.toString(i+2), startRowX - 30, NewStartY + cellSize / 2);
+        }
+
+        for (int i = -1; i < columns-1; i++) {
+            int NewStartX = startColX + i * cellSize;
+            int NewEndX = endColX + i * cellSize;
+            g.setColor(GridColor);
+            g.drawLine(NewStartX, startColY, NewEndX, endColY);
+
+            // Draw column numbers
+            g.setColor(Color.WHITE);
+            g.drawString(Integer.toString(i + 2), NewStartX + cellSize / 2, startColY - 10);
+        }
+
+        // Draw circles (existing code)
+        for (MyCircle d : circles) {
+            g.setColor(d.circleColor);
+            int r = 40;
+            g.fillOval(d.x - r / 2, d.y - r / 2, r, r);
+        }
+
+        repaint();
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyChar() == 'r') {
+            circleColor = Color.RED;
+        } else if (e.getKeyChar() == 'w') {
+            circleColor = Color.WHITE;
+        } else {
+            System.out.println("Pressed an invalid key");
+        }
+        repaint();
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (clickCount < 1 && player) {
+            int r = 30;
+
+            // Calculate the grid coordinates
+            int gridX = e.getX() / cellSize;
+            int gridY = e.getY() / cellSize;
+
+            // Calculate the center of the grid square
+            int centerX = gridX * cellSize + cellSize / 2;
+            int centerY = gridY * cellSize + cellSize / 2;
+
+            // Create a new circle for comparison
+            MyCircle newCircle = new MyCircle(centerX, centerY, r, circleColor);
+
+            // Check for overlap with existing circles
+            boolean overlap = false;
+            for (MyCircle existingCircle : circles) {
+                if (newCircle.intersects(existingCircle)) {
+                    overlap = true;
+                    break;
+                }
+            }
+
+            if (!overlap) {
+                System.out.println("You clicked at (" + gridX + "," + gridY + ").");
+
+                circles.add(newCircle);
+                clickCount++;
+                
+                player = !player;
+                
+                repaint();
+            } else {
+                System.out.println("You already chose this coordinate. Try again");
+            }
+        }
+    }
+    
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+    }
+}
+
+class Grids extends RectangleCanvas {
+	private List<Integer[]> centerCoordinates = new ArrayList<>();
+
+	public Grids(RectangleCanvas canvas) {
+		super();
+		setFocusable(true);
+	}
+	
+	@Override
+	// Override paint component to create grid 
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+
+		// Variables
+		final int rows = 11;
+		final int columns = 11;
+		final int startRowX = 50;
+		final int startRowY = 100;
+		final int startColX = 100;
+		final int startColY = 50;
+		final int cellSize = 50;
+		final int endRowX = 600;
+		final int endRowY = 100;
+		final int endColX = 100;
+		final int endColY = 600;
+
+		final Color GridColor = Color.BLACK;
+
+		// Draw grid with row and column numbers
+        for (int i = -1; i < rows-1; i++) {
+            int NewStartY = startRowY + i * cellSize;
+            int NewEndY = endRowY + i * cellSize;
+            g.setColor(GridColor);
+            g.drawLine(startRowX, NewStartY, endRowX, NewEndY);
+
+            // Draw row numbers
+            g.setColor(Color.WHITE);
+            g.drawString(Integer.toString(i+2), startRowX - 30, NewStartY + cellSize / 2);
+        }
+
+        for (int i = -1; i < columns-1; i++) {
+            int NewStartX = startColX + i * cellSize;
+            int NewEndX = endColX + i * cellSize;
+            g.setColor(GridColor);
+            g.drawLine(NewStartX, startColY, NewEndX, endColY);
+
+            // Draw column numbers
+            g.setColor(Color.WHITE);
+            g.drawString(Integer.toString(i + 2), NewStartX + cellSize / 2, startColY - 10);
+        }
+
+		// Iterates through rectangles and calculate center coordinates
+		for (Rectangle rect : rectangles) {
+			int centerX = rect.x + rect.width / 2;
+			int centerY = rect.y + rect.height / 2;
+
+			// Stores the center coordinates in the ArrayList
+			Integer[] center = { centerX, centerY };
+			centerCoordinates.add(center);
+		}
+	}
+
+	// Added a method to get the center coordinates ArrayList
+	public List<Integer[]> getCenterCoordinates() {
+		return centerCoordinates;
+	}
+}
+class Admiral_Purtee {
+
+	//Instance variables
+	int rows = 10;
+	int columns = 10;
+	int startRX = 100; //x coordinate of startColX
+	int startCY = 100; //y coordinate of startRowY
+	int cellSize = 50;
+
+	//Finding first place
+	int startPlacex = startRX + (cellSize / 2);
+	int startPlacey = startCY + (cellSize/2);
+
+	//Create arraylist
+	//ArrayList<ArrayList<Integer>> gridPoints = new ArrayList<ArrayList<Integer>>();
+	ArrayList<ArrayList<ArrayList<Integer>>> gridPoints = new ArrayList<ArrayList<ArrayList<Integer>>>();
+
+	//Constructions w/ parameters
+	Admiral_Purtee(int rows, int columns, int startRX, int startCY, int cellSize){
+		this.rows = rows;
+		this.columns = columns;
+		this.startRX = startRX;
+		this.startCY = startCY;
+		this.cellSize = cellSize;
+		this.gridPoints = gridPoints;
+	}
+
+	//Method for calculating out 
+	public void points() {
+		//Calculate out the points of grid
+		for (int i=0; i< (rows); i++) {
+
+			//Add array 
+			ArrayList<ArrayList<Integer>> rowEach = new ArrayList<ArrayList<Integer>>();
+			gridPoints.add(rowEach);
+
+			//For every row, y coordinate changes
+			startPlacey = startPlacey + cellSize*i;
+
+			//Go through columns
+			for(int j=0; j<(columns); j++) {
+
+				//Add arraylist 
+				ArrayList<Integer> coordinatesEach = new ArrayList<Integer>();
+				gridPoints.get(i).add(j, coordinatesEach);
+
+
+				//For every column, x coordinate changes
+				startPlacex = startPlacex + cellSize*j;
+
+				//Add to array 
+				gridPoints.get(i).get(j).add(0, startPlacex);
+				gridPoints.get(i).get(j).add(1, startPlacey);
+			}	
+		}
+
+		System.out.println(gridPoints);
+	}
+
+	public static void main(String[] args) {
+		Admiral_Purtee a = new Admiral_Purtee(10,10,100,100,50);
+		a.points();
+	}
+}
+
+class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListener {
 	private Color RectColor = Color.MAGENTA;
 	protected ArrayList<Rectangle> rectangles = new ArrayList<>();
 	private Rectangle currentDraggedRectangle = null;
