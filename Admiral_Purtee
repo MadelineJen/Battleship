@@ -1,5 +1,6 @@
 //Import
 import java.util.List;
+import java.util.Random;
 import java.util.ArrayList;
 import java.awt.Graphics;
 import java.awt.Color;
@@ -30,10 +31,18 @@ public class Admiral_Purtee {
 	int startPlacey = startCY + (cellSize/2);
 	
 	
+	//variables 
+	int rowGuess;
+	int columnGuess;
+	
+	
 	
 	//Create arraylist
 	//ArrayList<ArrayList<Integer>> gridPoints = new ArrayList<ArrayList<Integer>>();
 	ArrayList<ArrayList<ArrayList<Integer>>> gridPoints = new ArrayList<ArrayList<ArrayList<Integer>>>();
+	ArrayList<ArrayList<Integer>> computerPoints = new ArrayList<ArrayList<Integer>>();
+	
+	ArrayList<ArrayList<Integer>> checkOverlap = new ArrayList<ArrayList<Integer>>();
 
 	
 	//Constructions w/ parameters
@@ -44,6 +53,9 @@ public class Admiral_Purtee {
 		this.startCY = startCY;
 		this.cellSize = cellSize;
 		this.gridPoints = gridPoints;
+		
+		
+		
 	}
 	
 	//Method for calculating out 
@@ -56,7 +68,8 @@ public class Admiral_Purtee {
 			gridPoints.add(rowEach);
 			
 			//For every row, y coordinate changes
-			startPlacey = startPlacey + cellSize*i;
+			//startPlacey = startPlacey + cellSize*i;
+			int newStarty = startPlacey + cellSize*i;
 			
 			//Go through columns
 			for(int j=0; j<(columns); j++) {
@@ -67,18 +80,132 @@ public class Admiral_Purtee {
 				
 				
 				//For every column, x coordinate changes
-				startPlacex = startPlacex + cellSize*j;
+				//startPlacex = startPlacex + cellSize*j;
+				int newStartx = startPlacex + cellSize*j;
+
 				
 				//Add to array 
-				gridPoints.get(i).get(j).add(0, startPlacex);
-				gridPoints.get(i).get(j).add(1, startPlacey);
+				gridPoints.get(i).get(j).add(0, newStartx);
+				gridPoints.get(i).get(j).add(1, newStarty);
 
 				
 				
 			}	
 		}
 		
+		// Using calculated out grid poitns, randomize and reate your ships 
+		for (int ab=1; ab<5; ab++) {
+			
+			// Continue for how many ship length 
+			int countLoop = ab;
+			
+			// choose random and horizontal or vertical 
+			//Create instance of Random class
+			Random rand = new Random();
+			
+			int hORv = rand.nextInt(2);
+			
+			
+			//If zero, horizontal 
+			if (hORv == 0) {
+				System.out.println("Horizontal happening: "+ab);
+
+				//While loop to make sure no overlap 
+				boolean check = false;
+				
+				while (check == false) {
+
+					//find which rows
+					int rowGuess2 = rand.nextInt(rows);
+					
+					//find which column to start with 
+					int columnGuess2 = rand.nextInt(columns-(ab-1));
+					
+					// add the two values to arraylist (first point ship)
+					if (checkOverlap.isEmpty() == true) {
+						rowGuess = rowGuess2;
+						columnGuess = columnGuess2; 
+						ArrayList<Integer> placePoit = new ArrayList<Integer>();
+						placePoit.add(rowGuess2);
+						placePoit.add(columnGuess2);
+						break;
+					}
+					
+					else {
+						int shipLength = ab;
+						
+						while (shipLength > 0) {
+							shipLength = shipLength - 1;
+							
+							for (ArrayList<Integer> ints : checkOverlap) {
+								System.out.println("HWOEIRJWELR");
+								
+								if (ints.get(0) == rowGuess && ints.get(1)== columnGuess+shipLength) {
+									System.out.println("Happened");
+									continue;
+									
+								}
+								
+							}
+							
+						}
+						
+						//if not overlaped, add to list 
+						ArrayList<Integer> placePoit = new ArrayList<Integer>();
+						rowGuess = rowGuess2;
+						columnGuess = columnGuess2; 
+						placePoit.add(rowGuess2);
+						placePoit.add(columnGuess2);
+						break;
+						
+					}
+					
+					
+				}
+				
+				
+				//Continue for how many ship length 
+				while (countLoop > 0) {
+					
+					//Change how many you need to add
+					countLoop = countLoop - 1;
+					
+					//Get that placement 
+					ArrayList<Integer> addingPoint = gridPoints.get(rowGuess).get(columnGuess+countLoop);
+					computerPoints.add(addingPoint);	
+					
+				}
+			}
+			
+			//If one, vertical 
+			if (hORv == 1) {
+				System.out.println("Vertical happening: "+ab);
+				
+				//find which rows
+				int rowGuess = rand.nextInt(rows-(ab-1));
+				
+				//find which column to start with 
+				int columnGuess = rand.nextInt(columns);
+				
+				//Continue for how many ship length 
+				while (countLoop > 0) {
+					
+					//Change how many you need to add
+					countLoop = countLoop - 1;
+					
+					//Get that placement 
+					ArrayList<Integer> addingPoint = gridPoints.get(rowGuess+countLoop).get(columnGuess);
+					computerPoints.add(addingPoint);	
+					
+				}
+			}
+			
+			
+		}
+		
 		System.out.println(gridPoints);
+		System.out.println(computerPoints);
+
 
 	}
 	
