@@ -116,9 +116,6 @@ public class Admiral_Purtee {
 				while (check == false) {
 										
 					boolean overlapped = false;
-					
-					System.out.println("got new value "+overlapped);
-
 
 					//find which rows
 					int rowGuess2 = rand.nextInt(rows);
@@ -128,7 +125,6 @@ public class Admiral_Purtee {
 					
 					// add the two values to arraylist (first point ship)
 					if (checkOverlap.isEmpty() == true) {
-						System.out.println("Happened, okay");
 						rowGuess = rowGuess2;
 						columnGuess = columnGuess2; 
 						ArrayList<Integer> placePoit = new ArrayList<Integer>();
@@ -150,9 +146,7 @@ public class Admiral_Purtee {
 								break;
 							}
 							
-							for (ArrayList<Integer> ints : checkOverlap) {
-								System.out.println("HWOEIRJWELR");
-								
+							for (ArrayList<Integer> ints : checkOverlap) {								
 								if (ints.get(0) == rowGuess2 && ints.get(1)== columnGuess2+shipLength) {
 									System.out.println("Happened");
 									overlapped = true;
@@ -172,7 +166,6 @@ public class Admiral_Purtee {
 						
 						else {
 							//if not overlaped, add to list 
-							System.out.println("Continued on");
 							ArrayList<Integer> placePoit = new ArrayList<Integer>();
 							rowGuess = rowGuess2;
 							columnGuess = columnGuess2; 
@@ -222,7 +215,6 @@ public class Admiral_Purtee {
 					
 					// add the two values to arraylist (first point ship)
 					if (checkOverlap.isEmpty() == true) {
-						System.out.println("Happened, okay");
 						rowGuess = rowGuess2;
 						columnGuess = columnGuess2; 
 						ArrayList<Integer> placePoit = new ArrayList<Integer>();
@@ -244,9 +236,7 @@ public class Admiral_Purtee {
 								break;
 							}
 							
-							for (ArrayList<Integer> ints : checkOverlap) {
-								System.out.println("HWOEIRJWELR");
-								
+							for (ArrayList<Integer> ints : checkOverlap) {								
 								if (ints.get(0) == rowGuess2+shipLength && ints.get(1)== columnGuess2) {
 									System.out.println("Happened");
 									overlapped = true;
@@ -259,14 +249,12 @@ public class Admiral_Purtee {
 						
 						//If overlapped, continue to get new value
 						if (overlapped==true) {
-							System.out.println("Continued properly");
 							continue;
 						}
 						
 						
 						else {
 							//if not overlaped, add to list 
-							System.out.println("Continued on");
 							ArrayList<Integer> placePoit = new ArrayList<Integer>();
 							rowGuess = rowGuess2;
 							columnGuess = columnGuess2; 
