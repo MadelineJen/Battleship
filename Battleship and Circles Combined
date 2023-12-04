@@ -1,4 +1,9 @@
-
+/*
+Madeline Jen
+Anela Takiguci
+Ana Luciano
+Battleship Game Project
+ */
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.Graphics;
@@ -50,19 +55,6 @@ public class Battleship {
 		frame.add(buttonPanel, BorderLayout.NORTH);
 		frame.add(canvas, BorderLayout.CENTER);
 		frame.add(grid);
-		frame.setSize(620, 800);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
-	}
-}
-
-class Circles {
-
-	public static void main(String[] args) {
-		JFrame frame = new JFrame();
-
-		CircleCanvas canvas = new CircleCanvas();
-		frame.add(canvas);
 		frame.setSize(620, 800);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
