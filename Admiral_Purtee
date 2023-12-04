@@ -114,10 +114,10 @@ public class Admiral_Purtee {
 				boolean check = false;
 				
 				while (check == false) {
-					
-					System.out.println("got new value");
-					
+										
 					boolean overlapped = false;
+					
+					System.out.println("got new value "+overlapped);
 
 
 					//find which rows
@@ -139,6 +139,7 @@ public class Admiral_Purtee {
 					}
 					
 					else {
+						
 						int shipLength = ab;
 						
 						while (shipLength > 0) {
@@ -152,16 +153,13 @@ public class Admiral_Purtee {
 							for (ArrayList<Integer> ints : checkOverlap) {
 								System.out.println("HWOEIRJWELR");
 								
-								if (ints.get(0) == rowGuess && ints.get(1)== columnGuess+shipLength) {
+								if (ints.get(0) == rowGuess2 && ints.get(1)== columnGuess2+shipLength) {
 									System.out.println("Happened");
 									overlapped = true;
 									break;
 									
 								}
-								
 							}
-							
-							
 						}
 						
 						
@@ -178,14 +176,12 @@ public class Admiral_Purtee {
 							ArrayList<Integer> placePoit = new ArrayList<Integer>();
 							rowGuess = rowGuess2;
 							columnGuess = columnGuess2; 
-							placePoit.add(rowGuess2);
-							placePoit.add(columnGuess2);
+							placePoit.add(rowGuess);
+							placePoit.add(columnGuess);
 							break;
 							
 						}
 					}
-					
-					
 				}
 				
 				
