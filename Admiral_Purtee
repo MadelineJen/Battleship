@@ -59,7 +59,7 @@ public class Admiral_Purtee {
 	}
 	
 	//Method for calculating out 
-	public void points() {
+	public ArrayList<ArrayList<Integer>> points() {
 		//Calculate out the points of grid
 		for (int i=0; i< (rows); i++) {
 			
@@ -283,15 +283,16 @@ public class Admiral_Purtee {
 			
 		}
 		
-		System.out.println(gridPoints);
-		System.out.println(computerPoints);
+		//System.out.println(gridPoints);
+		//System.out.println(computerPoints);
+		return computerPoints;
 
 
 	}
 	
 	public static void main(String[] args) {
 		Admiral_Purtee a = new Admiral_Purtee(10,10,100,100,50);
-		a.points();
+		System.out.println(a.points()); 
 	  }
 	
 
