@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.LayoutManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Rectangle;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -25,43 +28,71 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 public class Battleship {
-	public static void main(String[] args) {
-		JFrame frame = new JFrame("Battleship Game");
-		RectangleCanvas canvas = new RectangleCanvas();
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Battleship Game");
+        RectangleCanvas canvas = new RectangleCanvas();
+        Grids grid = new Grids(canvas); // Pass the canvas reference to Grids
+        JButton confirmButton = new JButton("Confirm");
 
-		Grids grid = new Grids(canvas); // Pass the canvas reference to Grids
-		JButton confirmButton = new JButton("Confirm");
+        confirmButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DrawingPanel drawingPanel = new DrawingPanel();
+                int scaledWidth = 100; // Adjust the width as needed
+                int scaledHeight = 100; // Maintain the aspect ratio
+                ImageIcon originalIcon = new ImageIcon("C:\\Users\\madel\\Pictures\\Screenshots\\Screenshot 2023-12-05 223304.png");
+                Image scaledImage = originalIcon.getImage().getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
+                ImageIcon scaledIcon = new ImageIcon(scaledImage);
+                JLabel imageLabel = new JLabel(scaledIcon);
 
-		confirmButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				DrawingPanel drawingPanel = new DrawingPanel();
-				frame.getContentPane().removeAll(); // Remove existing components
-				frame.add(drawingPanel, BorderLayout.CENTER);
-				frame.revalidate();
-				frame.repaint();
-				drawingPanel.requestFocusInWindow();
-			}
-		});
+                JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                southPanel.setBackground(Color.BLUE); // Set background color to blue
+                southPanel.add(imageLabel);
 
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.add(confirmButton);
-		buttonPanel.setBackground(Color.BLUE);
-		frame.setLayout(new BorderLayout());
-		
-		 // Create an ImageIcon with your image file path
-        ImageIcon icon = new ImageIcon("C:\\Users\\madel\\Pictures\\Screenshots\\Screenshot 2023-12-03 204713.jpg");
-        JLabel imageLabel = new JLabel(icon);
-        frame.add(imageLabel, BorderLayout.SOUTH);
-		frame.add(buttonPanel, BorderLayout.NORTH);
-		frame.add(canvas, BorderLayout.CENTER);
-		frame.add(grid);
-		frame.setSize(620, 800);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
-	}
+                frame.getContentPane().removeAll(); // Remove existing components
+                frame.setLayout(new BorderLayout());
+                frame.add(drawingPanel, BorderLayout.CENTER);
+                frame.add(southPanel, BorderLayout.SOUTH);
+                frame.revalidate();
+                frame.repaint();
+
+                drawingPanel.requestFocusInWindow();
+            }
+        });
+
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(confirmButton);
+        buttonPanel.setBackground(Color.BLUE);
+        frame.setLayout(new BorderLayout());
+
+        // Create an ImageIcon with your image file path
+        ImageIcon originalIcon = new ImageIcon("C:\\Users\\madel\\Pictures\\Screenshots\\Screenshot 2023-12-05 223304.png");
+
+        // Scale the image to a smaller size
+        int scaledWidth = 100; // Adjust the width as needed
+        int scaledHeight = 100; // Maintain the aspect ratio
+        Image scaledImage = originalIcon.getImage().getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+        JLabel imageLabel = new JLabel(scaledIcon);
+
+        // Set the layout of SOUTH to FlowLayout with left alignment
+        frame.add(buttonPanel, BorderLayout.NORTH);
+        frame.add(canvas, BorderLayout.CENTER);
+        frame.add(grid);
+
+        // Create a panel for SOUTH with FlowLayout
+        JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        southPanel.setBackground(Color.BLUE); // Set background color to blue
+        southPanel.add(imageLabel);
+        frame.add(southPanel, BorderLayout.SOUTH);
+
+        frame.setSize(675, 800);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
 }
-
 class MyCircle {
 	int x, y, r;
 	Color circleColor;
