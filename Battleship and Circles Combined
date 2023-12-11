@@ -673,7 +673,7 @@ class CircleCanvas extends JPanel implements MouseListener{
 							Random rand = new Random();
 							int theRow = rand.nextInt(rows-2);
 							int theColumn = rand.nextInt(columns-2);
-							System.out.println("Admiral Purtee: row " + theRow +" and column " + theColumn);
+							System.out.println("Admiral Purtee guessed row " + theRow +" and column " + theColumn);
 
 							//get the array w/ integers
 							System.out.println("This is: "+ gridPoints.get(theRow).get(theColumn));
@@ -683,7 +683,7 @@ class CircleCanvas extends JPanel implements MouseListener{
 
 							//Create circle w/ the x and y (and add to computerGuess)
 							MyCircle circ = new MyCircle(computerX, computerY, 30, Color.GREEN);
-							System.out.println("Admiral Purtee guessed: " + computerX + " and "+ computerY);
+							//System.out.println("Admiral Purtee guessed: " + computerX + " and "+ computerY);
 							//System.out.println("Admiral Purtee attacked at " + (circ.getX()/cellSize - 1) +", "+ (circ.getY()/cellSize-1)+"!");
 
 
