@@ -600,7 +600,7 @@ class CircleCanvas extends JPanel implements MouseListener{
 		@Override
 		public void mouseClicked(MouseEvent e) {
 
-			System.out.println("ClickCount: "+ clickCount + "And player"+ player);
+			System.out.println("ClickCount: "+ clickCount + "and player"+ player);
 			if (clickCount < 1 && player) {
 				boolean needValue = false;
 
@@ -673,12 +673,12 @@ class CircleCanvas extends JPanel implements MouseListener{
 						// Player put down their turn, so computer go
 						//NEED TO ADD THING TO CHECK IF USER WON OR NOT
 						while (needValue ==false) {
-							System.out.println("My turn to geuss!!");
+							System.out.println("My turn to guess!!");
 							//get random x and y value  
 							Random rand = new Random();
 							int theRow = rand.nextInt(rows-2);
 							int theColumn = rand.nextInt(columns-2);
-							System.out.println("Computer guessed: row+coorlunn " + theRow +" " + theColumn);
+							System.out.println("Computer guessed: row + column " + theRow +" " + theColumn);
 
 							//get the array w/ integers
 							System.out.println("This is: "+ gridPoints.get(theRow).get(theColumn));
@@ -688,7 +688,7 @@ class CircleCanvas extends JPanel implements MouseListener{
 
 							//Create circle w/ the x and y (and add to computerGuess)
 							MyCircle circ = new MyCircle(computerX, computerY, 30, Color.GREEN);
-							System.out.println("Computer guessed: " + computerX + "And "+ computerY);
+							System.out.println("Computer guessed: " + computerX + " and "+ computerY);
 							//System.out.println("Admiral Purtee attacked at " + (circ.getX()/cellSize - 1) +", "+ (circ.getY()/cellSize-1)+"!");
 
 
@@ -716,7 +716,7 @@ class CircleCanvas extends JPanel implements MouseListener{
 								for (MyCircle userCircle : userPlacement) {
 									if (circ.intersects(userCircle)) {
 										computerCorrect = computerCorrect + 1;
-										System.out.println("Admiral Purtee has hit your ship! He hit at " + (circ.getX()/cellSize - 1) +", "+ (circ.getY()/cellSize-1)+"!");
+										System.out.println("Admiral Purtee has hit your ship! He hit your ship at point " + "(" + (circ.getX()/cellSize - 1) +","+ (circ.getY()/cellSize-1)+ ")" + "!");
 										break;
 									}
 								}
@@ -833,7 +833,7 @@ class Admiral_Purtee {
 	int rows = 10;
 	int columns = 10;
 	int startRX = 100; //x coordinate of startColX
-	int startCY = 100; //y cooridnate of startRowY
+	int startCY = 100; //y coordinate of startRowY
 	int cellSize = 50;
 
 	//Finding first place
@@ -1101,13 +1101,11 @@ class Admiral_Purtee {
 		}
 		//
 		for (MyCircle cir : computerCircles) {
-			System.out.println("Computer circle coord: "+ cir.getX() + "nd "+ cir.getY());
+			System.out.println("Computer circle coordinate: "+ cir.getX() + "and "+ cir.getY());
 			
 		}
 		//return array w/ circles
 		return computerCircles;
 
 	}
-
-
 }
