@@ -600,7 +600,7 @@ class DrawingPanel extends JPanel implements MouseListener, KeyListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		
+
 		System.out.println("ClickCount: "+ clickCount + "And player"+ player);
 		if (clickCount < 1 && player) {
 			boolean needValue = false;
@@ -659,72 +659,79 @@ class DrawingPanel extends JPanel implements MouseListener, KeyListener {
 					System.out.println("You already chose this coordinate. Try again");
 				}
 
+				//Check if user won or not 
 				//Check user won or not 
 				if (userCorrect == 10){
-					System.out.println("YOU WON!!");
+					System.out.println("YOU WON!! Congragulations!!");
+					clickCount = 1;
+					player = false;
+					needValue = true;
 				}
 
 
-				// Player put down their turn, so computer go
-				//NEED TO ADD THING TO CHECK IF USER WON OR NOT
-				while (needValue ==false) {
-					System.out.println("My turn to geuss!!");
-					//get random x and y value  
-					Random rand = new Random();
-					int theRow = rand.nextInt(rows-2);
-					int theColumn = rand.nextInt(columns-2);
-					System.out.println("Computer guessed: row+coorlunn " + theRow +" " + theColumn);
+				else {
 
-					//get the array w/ integers
-					System.out.println("This is: "+ gridPoints.get(theRow).get(theColumn));
-					ArrayList<Integer> addingPoint = gridPoints.get(theRow).get(theColumn);
-					int computerX = addingPoint.get(0);
-					int computerY = addingPoint.get(1);
+					// Player put down their turn, so computer go
+					//NEED TO ADD THING TO CHECK IF USER WON OR NOT
+					while (needValue ==false) {
+						System.out.println("My turn to geuss!!");
+						//get random x and y value  
+						Random rand = new Random();
+						int theRow = rand.nextInt(rows-2);
+						int theColumn = rand.nextInt(columns-2);
+						System.out.println("Computer guessed: row+coorlunn " + theRow +" " + theColumn);
 
-					//Create circle w/ the x and y (and add to computerGuess)
-					MyCircle circ = new MyCircle(computerX, computerY, 30, Color.GREEN);
-					System.out.println("Computer guessed: " + computerX + "And "+ computerY);
-					//System.out.println("Admiral Purtee attacked at " + (circ.getX()/cellSize - 1) +", "+ (circ.getY()/cellSize-1)+"!");
+						//get the array w/ integers
+						System.out.println("This is: "+ gridPoints.get(theRow).get(theColumn));
+						ArrayList<Integer> addingPoint = gridPoints.get(theRow).get(theColumn);
+						int computerX = addingPoint.get(0);
+						int computerY = addingPoint.get(1);
+
+						//Create circle w/ the x and y (and add to computerGuess)
+						MyCircle circ = new MyCircle(computerX, computerY, 30, Color.GREEN);
+						System.out.println("Computer guessed: " + computerX + "And "+ computerY);
+						//System.out.println("Admiral Purtee attacked at " + (circ.getX()/cellSize - 1) +", "+ (circ.getY()/cellSize-1)+"!");
 
 
-					//Make sure didn't make same guess
-					for (MyCircle cir : computerGuess) {
-						if (circ.intersects(cir)){
-							needValue = true;
-							break;
-						}
-					}
-					//if didn't overlap, break, if overlapped, continue
-					if (needValue == true) {
-						System.out.println("Overlaped guess...");
-						needValue = false;
-						continue;
-					}
-
-					else {
-						computerGuess.add(circ);
-						player = true;
-						clickCount = 0;
-						needValue = true;
-
-						//Check if it hit or not 
-						for (MyCircle userCircle : userPlacement) {
-							if (circ.intersects(userCircle)) {
-								computerCorrect = computerCorrect + 1;
-								System.out.println("Admiral Purtee has hit your ship! He hit at " + (circ.getX()/cellSize - 1) +", "+ (circ.getY()/cellSize-1)+"!");
+						//Make sure didn't make same guess
+						for (MyCircle cir : computerGuess) {
+							if (circ.intersects(cir)){
+								needValue = true;
 								break;
 							}
 						}
-						break;
-					}
-				}
-				//Check if computer won or not 
-				//Check user won or not 
-				if (computerCorrect == 10){
-					System.out.println("Oh no, Admiral Purtee won... :( ");
-					player = false;
-				}
+						//if didn't overlap, break, if overlapped, continue
+						if (needValue == true) {
+							System.out.println("Overlaped guess...");
+							needValue = false;
+							continue;
+						}
 
+						else {
+							computerGuess.add(circ);
+							player = true;
+							clickCount = 0;
+							needValue = true;
+
+							//Check if it hit or not 
+							for (MyCircle userCircle : userPlacement) {
+								if (circ.intersects(userCircle)) {
+									computerCorrect = computerCorrect + 1;
+									System.out.println("Admiral Purtee has hit your ship! He hit at " + (circ.getX()/cellSize - 1) +", "+ (circ.getY()/cellSize-1)+"!");
+									break;
+								}
+							}
+							break;
+						}
+					}
+					//Check if computer won or not 
+					//Check user won or not 
+					if (computerCorrect == 10){
+						System.out.println("Oh no, Admiral Purtee won... :( ");
+						player = false;
+					}
+
+				}
 			}
 		}
 
@@ -752,6 +759,7 @@ class DrawingPanel extends JPanel implements MouseListener, KeyListener {
 
 	}
 }
+
 
 
 class Grids extends RectangleCanvas {
