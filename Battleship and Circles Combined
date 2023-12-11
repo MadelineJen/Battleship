@@ -673,7 +673,9 @@ class CircleCanvas extends JPanel implements MouseListener{
 							Random rand = new Random();
 							int theRow = rand.nextInt(rows-2);
 							int theColumn = rand.nextInt(columns-2);
-							System.out.println("Admiral Purtee guessed row " + theRow +" and column " + theColumn);
+							int theRow1 = theRow+1;
+							int theColumn1 = theColumn+1;		
+							System.out.println("Admiral Purtee guessed row " + theRow1 +" and column " + theColumn1);
 
 							//get the array w/ integers
 							System.out.println("This is: "+ gridPoints.get(theRow).get(theColumn));
