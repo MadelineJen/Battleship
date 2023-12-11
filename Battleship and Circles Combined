@@ -9,13 +9,13 @@ import java.util.Random;
 import java.util.ArrayList;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.LayoutManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Rectangle;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.ActionEvent;
@@ -38,18 +38,31 @@ public class Battleship {
             @Override
             public void actionPerformed(ActionEvent e) {
                 DrawingPanel drawingPanel = new DrawingPanel();
-                int scaledWidth = 100; // Adjust the width as needed
-                int scaledHeight = 100; // Maintain the aspect ratio
-                ImageIcon originalIcon = new ImageIcon("C:\\Users\\madel\\Pictures\\Screenshots\\Screenshot 2023-12-05 223304.png");
+                int scaledWidth = 140;
+                int scaledHeight = 120;
+                ImageIcon originalIcon = new ImageIcon("C:\\Users\\madel\\Downloads\\AdmiralPurtee.png");
                 Image scaledImage = originalIcon.getImage().getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
                 ImageIcon scaledIcon = new ImageIcon(scaledImage);
                 JLabel imageLabel = new JLabel(scaledIcon);
 
-                JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-                southPanel.setBackground(Color.BLUE); // Set background color to blue
-                southPanel.add(imageLabel);
+                JPanel southPanel = new JPanel(new BorderLayout());
+                southPanel.setBackground(Color.BLUE);
 
-                frame.getContentPane().removeAll(); // Remove existing components
+                // Add the image to the west (left) of the panel
+                southPanel.add(imageLabel, BorderLayout.WEST);
+                
+             // Adjust the image position by creating an EmptyBorder with negative insets
+                int moveRight = 50;
+                int moveUp = -20;
+                EmptyBorder imageBorder = new EmptyBorder(-moveUp, moveRight, 20, 0);
+                imageLabel.setBorder(imageBorder);
+
+                // Add the text
+                JLabel messagePurtee = new JLabel("               ARGH! I will win this match. I will not go easy on you.");
+               
+                southPanel.add(messagePurtee, BorderLayout.CENTER);
+                
+                frame.getContentPane().removeAll();
                 frame.setLayout(new BorderLayout());
                 frame.add(drawingPanel, BorderLayout.CENTER);
                 frame.add(southPanel, BorderLayout.SOUTH);
@@ -60,18 +73,17 @@ public class Battleship {
             }
         });
 
-
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(confirmButton);
         buttonPanel.setBackground(Color.BLUE);
         frame.setLayout(new BorderLayout());
 
         // Create an ImageIcon with your image file path
-        ImageIcon originalIcon = new ImageIcon("C:\\Users\\madel\\Pictures\\Screenshots\\Screenshot 2023-12-05 223304.png");
+        ImageIcon originalIcon = new ImageIcon("C:\\\\Users\\\\madel\\\\Downloads\\\\AdmiralPurtee.png");
 
         // Scale the image to a smaller size
-        int scaledWidth = 100; // Adjust the width as needed
-        int scaledHeight = 100; // Maintain the aspect ratio
+        int scaledWidth = 140; // Adjust the width as needed
+        int scaledHeight = 120; // Maintain the aspect ratio
         Image scaledImage = originalIcon.getImage().getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
 
@@ -87,6 +99,17 @@ public class Battleship {
         southPanel.setBackground(Color.BLUE); // Set background color to blue
         southPanel.add(imageLabel);
         frame.add(southPanel, BorderLayout.SOUTH);
+        
+     // Adjust the image position by creating an EmptyBorder with negative insets
+        int moveRight = 50;
+        int moveUp = 5;
+        EmptyBorder imageBorder = new EmptyBorder(-moveUp, moveRight, 0, 0);
+        imageLabel.setBorder(imageBorder);
+
+        // Add the text
+        JLabel messagePurtee = new JLabel("      Welcome to Battleship! I am Admiral Purtee. I hope you are prepared.");
+       
+        southPanel.add(messagePurtee, BorderLayout.CENTER);
 
         frame.setSize(675, 800);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -177,11 +200,11 @@ class DrawingPanel extends JPanel implements MouseListener, KeyListener {
         addKeyListener(this);
         setFocusable(true);
     }
-
+ 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
+        
         // Draw grid with row and column numbers
         for (int i = 0; i < rows; i++) {
         	int newStartY = startRowY + i * cellSize;
