@@ -130,7 +130,6 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
 	private Color RectColor = Color.MAGENTA;
 	protected ArrayList<Rectangle> rectangles = new ArrayList<>();
 	private Rectangle currentDraggedRectangle = null;
-	private int otherX, otherY;
 	private int clickCount = 0;
 	private int gridSize = 50; // Size of each grid square
 	private int gridWidth = 11; // Number of grid squares in the x-direction
@@ -170,8 +169,6 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
 			for (Rectangle rect : rectangles) {
 				if (rect.contains(x, y)) {
 					currentDraggedRectangle = rect;
-					otherX = x - rect.x;
-					otherY = y - rect.y;
 					break;
 				}
 			}
@@ -263,7 +260,7 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
 				
 				int lkj = 1;
 				for (MyCircle circ : userPlacement) {
-					System.out.println(lkj + "Circle coordinates: "+ circ.getX() + "and "+ circ.getY());
+					//System.out.println(lkj + "Circle coordinates: "+ circ.getX() + "and "+ circ.getY());
 					lkj = lkj+1;
 				}
 
@@ -372,7 +369,7 @@ class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListen
 					
 					int lkj = 1;
 					for (MyCircle circ : userPlacement) {
-						System.out.println(lkj + "Circle coordinates: "+ circ.getX() + "and "+ circ.getY());
+						//System.out.println(lkj + "Circle coordinates: "+ circ.getX() + "and "+ circ.getY());
 						lkj = lkj+1;
 					}
 					
@@ -598,7 +595,7 @@ class CircleCanvas extends JPanel implements MouseListener{
 		@Override
 		public void mouseClicked(MouseEvent e) {
 
-			System.out.println("ClickCount: "+ clickCount + "and player"+ player);
+			//System.out.println("ClickCount: "+ clickCount + "and player"+ player);
 			if (clickCount < 1 && player) {
 				boolean needValue = false;
 
@@ -1097,11 +1094,10 @@ class Admiral_Purtee {
 			
 
 		}
-		//
-		for (MyCircle cir : computerCircles) {
-			System.out.println("Computer circle coordinate: "+ cir.getX() + "and "+ cir.getY());
+		//for (MyCircle cir : computerCircles) {
+			//System.out.println("Computer circle coordinate: "+ cir.getX() + "and "+ cir.getY());
 			
-		}
+		//}
 		//return array w/ circles
 		return computerCircles;
 
