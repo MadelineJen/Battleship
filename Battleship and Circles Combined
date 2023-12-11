@@ -116,6 +116,150 @@ public class Battleship {
         frame.setVisible(true);
     }
 }
+
+class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListener {
+	private Color RectColor = Color.MAGENTA;
+	protected ArrayList<Rectangle> rectangles = new ArrayList<>();
+	private Rectangle currentDraggedRectangle = null;
+	private int otherX, otherY;
+	private int clickCount = 0;
+	private int gridSize = 50; // Size of each grid square
+	private int gridWidth = 11; // Number of grid squares in the x-direction
+	private int gridHeight = 11; // Number of grid squares in the y-direction
+	private boolean isDraggable = true;
+
+	public RectangleCanvas() {
+		setBackground(Color.BLUE);
+		addMouseListener(this);
+		addMouseMotionListener(this);
+		setFocusable(true);
+	}
+
+	public void setDraggable(boolean draggable) {
+		isDraggable = draggable;
+	}
+
+	public void mousePressed(MouseEvent e) {
+		if (isDraggable) {
+			int x = e.getX();
+			int y = e.getY();
+			for (Rectangle rect : rectangles) {
+				if (rect.contains(x, y)) {
+					currentDraggedRectangle = rect;
+					otherX = x - rect.x;
+					otherY = y - rect.y;
+					break;
+				}
+			}
+		}
+	}
+
+	public void mouseReleased(MouseEvent e) {
+	}
+
+	public void mouseClicked(MouseEvent e) {
+		if (isDraggable && clickCount < 4) {
+			int x = (e.getX() / gridSize) * gridSize;
+			int y = (e.getY() / gridSize) * gridSize;
+			int width = (clickCount + 1) * gridSize;
+			int height = gridSize;
+
+			// Ensures that the rectangle stays within the grid boundaries
+			if (x + width > gridWidth * gridSize) {
+				x = (gridWidth - (clickCount + 1)) * gridSize;
+			}
+			if (y + height > gridHeight * gridSize) {
+				y = (gridHeight - 1) * gridSize;
+			}
+
+			Rectangle newRect = new Rectangle(x, y, width, height);
+
+			// Check for overlap with existing rectangles
+			boolean overlap = false;
+			for (Rectangle existingRect : rectangles) {
+				if (newRect.intersects(existingRect)) {
+					overlap = true;
+					break;
+				}
+			}
+
+			// Add the new rectangle only if there is no overlap
+			if (!overlap) {
+				rectangles.add(newRect);
+				clickCount++;
+				repaint();
+			}
+		}
+	}
+
+	public void mouseDragged(MouseEvent e) {
+		if (currentDraggedRectangle != null) {
+			int x = e.getX();
+			int y = e.getY();
+			int gridX = (x / gridSize) * gridSize;
+			int gridY = (y / gridSize) * gridSize;
+
+			// Ensure that the rectangle stays within the grid boundaries
+			if (gridX < 100 || gridY < 100) {
+				// Prevent dragging beyond the first column or row
+				return;
+			}
+
+			// Ensure that the rectangle stays within the drawn grid boundaries
+			int lastDrawnLineX = ((gridWidth) * gridSize) + 50;
+			int lastDrawnLineY = ((gridHeight) * gridSize) + 50;
+
+			if (gridX + currentDraggedRectangle.width > lastDrawnLineX) {
+				gridX = lastDrawnLineX - currentDraggedRectangle.width;
+			}
+			if (gridY + currentDraggedRectangle.height > lastDrawnLineY) {
+				gridY = lastDrawnLineY - currentDraggedRectangle.height;
+			}
+
+			// Check for collision with existing rectangles
+			boolean collision = false;
+			for (Rectangle rect : rectangles) {
+				if (rect != currentDraggedRectangle && rect.intersects(new Rectangle(gridX, gridY, currentDraggedRectangle.width, currentDraggedRectangle.height))) {
+					collision = true;
+					break;
+				}
+			}
+
+			// If there is no collision, update the position
+			if (!collision) {
+				currentDraggedRectangle.setLocation(gridX, gridY);
+				repaint();
+				if (isRotateKeyPressed(e)) {
+					int temp = currentDraggedRectangle.width;
+					currentDraggedRectangle.width = currentDraggedRectangle.height;
+					currentDraggedRectangle.height = temp;
+				}
+			}
+		}
+	}
+
+	private boolean isRotateKeyPressed(MouseEvent e) {
+		return e.isShiftDown();
+	}
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		for (Rectangle rect : rectangles) {
+			g.setColor(RectColor);
+			g.fillRect(rect.x, rect.y, rect.width, rect.height);
+		}
+	}
+
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	public void mouseExited(MouseEvent e) {
+	}
+
+	public void mouseMoved(MouseEvent e) {
+	}
+
+}
+
 class MyCircle {
 	int x, y, r;
 	Color circleColor;
@@ -205,19 +349,14 @@ class DrawingPanel extends JPanel implements MouseListener, KeyListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        // Draw grid with row and column numbers
+        // Draws the grid
         for (int i = 0; i < rows; i++) {
         	int newStartY = startRowY + i * cellSize;
         	int newEndY = endRowY + i * cellSize;
         	g.setColor(GridColor);
         	g.drawLine(startRowX, newStartY, endRowX, newEndY);
         }
-        for (int i = 0; i+1 < rows; i++) {
-        	int newStartY = startRowY + i * cellSize;
-        	int newEndY = endRowY + i * cellSize;
-        	g.setColor(GridColor);
-        	g.drawString(Integer.toString(i+1), startRowX +25, newStartY + cellSize / 2);
-        }
+        
 
         for (int i = 0; i < columns; i++) {
         	int newStartX = startColX + i * cellSize;
@@ -226,14 +365,20 @@ class DrawingPanel extends JPanel implements MouseListener, KeyListener {
         	g.drawLine(newStartX, startColY, newEndX, endColY);
         }
         
+      //Draws the grid numbers for the rows and columns
+        for (int i = 0; i+1 < rows; i++) {
+        	int newStartY = startRowY + i * cellSize;
+        	g.setColor(GridColor);
+        	g.drawString(Integer.toString(i+1), startRowX +25, newStartY + cellSize / 2);
+        }
+        
         for (int i = 0; i+1 < columns; i++) {
         	int newStartX = startColX + i * cellSize;
-        	int newEndX = endColX + i * cellSize;
         	g.setColor(GridColor);
         	g.drawString(Integer.toString(i+1), newStartX - 50 + cellSize + cellSize / 2, startColY + cellSize- 15);
         }
         
-        // Draw circles (existing code)
+        // Draws circles 
         for (MyCircle d : circles) {
         	g.setColor(d.circleColor);
         	int r = 40;
@@ -242,7 +387,6 @@ class DrawingPanel extends JPanel implements MouseListener, KeyListener {
 
         repaint();
     }
-
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -398,145 +542,284 @@ class Grids extends RectangleCanvas {
 	}
 }
 
-class RectangleCanvas extends JPanel implements MouseListener, MouseMotionListener {
-	private Color RectColor = Color.MAGENTA;
-	protected ArrayList<Rectangle> rectangles = new ArrayList<>();
-	private Rectangle currentDraggedRectangle = null;
-	private int otherX, otherY;
-	private int clickCount = 0;
-	private int gridSize = 50; // Size of each grid square
-	private int gridWidth = 11; // Number of grid squares in the x-direction
-	private int gridHeight = 11; // Number of grid squares in the y-direction
-	private boolean isDraggable = true;
+class Admiral_Purtee {
 
-	public RectangleCanvas() {
-		setBackground(Color.BLUE);
-		addMouseListener(this);
-		addMouseMotionListener(this);
-		setFocusable(true);
+
+	//Instance variables
+	int rows = 10;
+	int columns = 10;
+	int startRX = 100; //x coordinate of startColX
+	int startCY = 100; //y cooridnate of startRowY
+	int cellSize = 50;
+	
+	//Finding first place
+	int startPlacex = startRX + (cellSize / 2);
+	int startPlacey = startCY + (cellSize/2);
+	
+	
+	//variables 
+	int rowGuess;
+	int columnGuess;
+	
+	
+	
+	//Create arraylist
+	//ArrayList<ArrayList<Integer>> gridPoints = new ArrayList<ArrayList<Integer>>();
+	ArrayList<ArrayList<ArrayList<Integer>>> gridPoints = new ArrayList<ArrayList<ArrayList<Integer>>>();
+	ArrayList<ArrayList<Integer>> computerPoints = new ArrayList<ArrayList<Integer>>();
+	
+	ArrayList<ArrayList<Integer>> checkOverlap = new ArrayList<ArrayList<Integer>>();
+
+	
+	//Constructions w/ parameters
+	Admiral_Purtee(int rows, int columns, int startRX, int startCY, int cellSize){
+		this.rows = rows;
+		this.columns = columns;
+		this.startRX = startRX;
+		this.startCY = startCY;
+		this.cellSize = cellSize;
+		this.gridPoints = gridPoints;
+		
+		
+		
 	}
+	
+	//Method for calculating out 
+	public ArrayList<ArrayList<Integer>> points() {
+		//Calculate out the points of grid
+		for (int i=0; i< (rows); i++) {
+			
+			//Add array 
+			ArrayList<ArrayList<Integer>> rowEach = new ArrayList<ArrayList<Integer>>();
+			gridPoints.add(rowEach);
+			
+			//For every row, y coordinate changes
+			//startPlacey = startPlacey + cellSize*i;
+			int newStarty = startPlacey + cellSize*i;
+			
+			//Go through columns
+			for(int j=0; j<(columns); j++) {
+				
+				//Add arraylist 
+				ArrayList<Integer> coordinatesEach = new ArrayList<Integer>();
+				gridPoints.get(i).add(j, coordinatesEach);
+				
+				
+				//For every column, x coordinate changes
+				//startPlacex = startPlacex + cellSize*j;
+				int newStartx = startPlacex + cellSize*j;
 
-	public void setDraggable(boolean draggable) {
-		isDraggable = draggable;
-	}
+				
+				//Add to array 
+				gridPoints.get(i).get(j).add(0, newStartx);
+				gridPoints.get(i).get(j).add(1, newStarty);
 
-	public void mousePressed(MouseEvent e) {
-		if (isDraggable) {
-			int x = e.getX();
-			int y = e.getY();
-			for (Rectangle rect : rectangles) {
-				if (rect.contains(x, y)) {
-					currentDraggedRectangle = rect;
-					otherX = x - rect.x;
-					otherY = y - rect.y;
-					break;
+				
+				
+			}	
+		}
+		
+		// Using calculated out grid poitns, randomize and reate your ships 
+		for (int ab=1; ab<5; ab++) {
+			
+			// Continue for how many ship length 
+			int countLoop = ab;
+			
+			// choose random and horizontal or vertical 
+			//Create instance of Random class
+			Random rand = new Random();
+			
+			int hORv = rand.nextInt(2);
+			
+			
+			//If zero, horizontal 
+			if (hORv == 0) {
+				System.out.println("Horizontal happening: "+ab);
+
+				//While loop to make sure no overlap 
+				boolean check = false;
+				
+				while (check == false) {
+										
+					boolean overlapped = false;
+
+					//find which rows
+					int rowGuess2 = rand.nextInt(rows);
+					
+					//find which column to start with 
+					int columnGuess2 = rand.nextInt(columns-(ab-1));
+					
+					// add the two values to arraylist (first point ship)
+					if (checkOverlap.isEmpty() == true) {
+						rowGuess = rowGuess2;
+						columnGuess = columnGuess2; 
+						ArrayList<Integer> placePoit = new ArrayList<Integer>();
+						placePoit.add(rowGuess2);
+						placePoit.add(columnGuess2);
+						checkOverlap.add(placePoit);
+						break;
+					}
+					
+					else {
+						
+						int shipLength = ab;
+						
+						while (shipLength > 0) {
+							shipLength = shipLength - 1;
+							
+							//if overlapped, continue on 
+							if (overlapped==true) {
+								break;
+							}
+							
+							for (ArrayList<Integer> ints : checkOverlap) {								
+								if (ints.get(0) == rowGuess2 && ints.get(1)== columnGuess2+shipLength) {
+									System.out.println("Happened");
+									overlapped = true;
+									break;
+									
+								}
+							}
+						}
+						
+						
+						//If overlapped, continue to get new value
+						if (overlapped==true) {
+							System.out.println("Continued properly");
+							continue;
+						}
+						
+						
+						else {
+							//if not overlaped, add to list 
+							ArrayList<Integer> placePoit = new ArrayList<Integer>();
+							rowGuess = rowGuess2;
+							columnGuess = columnGuess2; 
+							placePoit.add(rowGuess);
+							placePoit.add(columnGuess);
+							break;
+							
+						}
+					}
+				}
+				
+				
+				//Continue for how many ship length 
+				while (countLoop > 0) {
+					
+					//Change how many you need to add
+					countLoop = countLoop - 1;
+					
+					//Get that placement 
+					ArrayList<Integer> addingPoint = gridPoints.get(rowGuess).get(columnGuess+countLoop);
+					computerPoints.add(addingPoint);	
+					
 				}
 			}
-		}
-	}
+			
+			//If one, vertical 
+			else if (hORv == 1) {
+				System.out.println("Vertical happening: "+ab);
 
-	public void mouseReleased(MouseEvent e) {
-	}
+				//While loop to make sure no overlap 
+				boolean check = false;
+				
+				while (check == false) {
+										
+					boolean overlapped = false;
+					
+					System.out.println("got new value "+overlapped);
 
-	public void mouseClicked(MouseEvent e) {
-		if (isDraggable && clickCount < 4) {
-			int x = (e.getX() / gridSize) * gridSize;
-			int y = (e.getY() / gridSize) * gridSize;
-			int width = (clickCount + 1) * gridSize;
-			int height = gridSize;
 
-			// Ensures that the rectangle stays within the grid boundaries
-			if (x + width > gridWidth * gridSize) {
-				x = (gridWidth - (clickCount + 1)) * gridSize;
-			}
-			if (y + height > gridHeight * gridSize) {
-				y = (gridHeight - 1) * gridSize;
-			}
+					//find which rows
+					int rowGuess2 = rand.nextInt(rows-(ab-1));
 
-			Rectangle newRect = new Rectangle(x, y, width, height);
+					
+					//find which column to start with 
+					int columnGuess2 = rand.nextInt(columns);
 
-			// Check for overlap with existing rectangles
-			boolean overlap = false;
-			for (Rectangle existingRect : rectangles) {
-				if (newRect.intersects(existingRect)) {
-					overlap = true;
-					break;
+					
+					// add the two values to arraylist (first point ship)
+					if (checkOverlap.isEmpty() == true) {
+						rowGuess = rowGuess2;
+						columnGuess = columnGuess2; 
+						ArrayList<Integer> placePoit = new ArrayList<Integer>();
+						placePoit.add(rowGuess2);
+						placePoit.add(columnGuess2);
+						checkOverlap.add(placePoit);
+						break;
+					}
+					
+					else {
+						
+						int shipLength = ab;
+						
+						while (shipLength > 0) {
+							shipLength = shipLength - 1;
+							
+							//if overlapped, continue on 
+							if (overlapped==true) {
+								break;
+							}
+							
+							for (ArrayList<Integer> ints : checkOverlap) {								
+								if (ints.get(0) == rowGuess2+shipLength && ints.get(1)== columnGuess2) {
+									System.out.println("Happened");
+									overlapped = true;
+									break;
+									
+								}
+							}
+						}
+						
+						
+						//If overlapped, continue to get new value
+						if (overlapped==true) {
+							continue;
+						}
+						
+						
+						else {
+							//if not overlaped, add to list 
+							ArrayList<Integer> placePoit = new ArrayList<Integer>();
+							rowGuess = rowGuess2;
+							columnGuess = columnGuess2; 
+							placePoit.add(rowGuess);
+							placePoit.add(columnGuess);
+							break;
+							
+						}
+					}
+				}
+				
+				
+				//Continue for how many ship length 
+				while (countLoop > 0) {
+					
+					//Change how many you need to add
+					countLoop = countLoop - 1;
+					
+					//Get that placement 
+					ArrayList<Integer> addingPoint = gridPoints.get(rowGuess+countLoop).get(columnGuess);
+					computerPoints.add(addingPoint);	
+					
 				}
 			}
-
-			// Add the new rectangle only if there is no overlap
-			if (!overlap) {
-				rectangles.add(newRect);
-				clickCount++;
-				repaint();
-			}
+			
+			
 		}
+		
+		//System.out.println(gridPoints);
+		//System.out.println(computerPoints);
+		return computerPoints;
+
+
 	}
-
-	public void mouseDragged(MouseEvent e) {
-		if (currentDraggedRectangle != null) {
-			int x = e.getX();
-			int y = e.getY();
-			int gridX = (x / gridSize) * gridSize;
-			int gridY = (y / gridSize) * gridSize;
-
-			// Ensure that the rectangle stays within the grid boundaries
-			if (gridX < 100 || gridY < 100) {
-				// Prevent dragging beyond the first column or row
-				return;
-			}
-
-			// Ensure that the rectangle stays within the drawn grid boundaries
-			int lastDrawnLineX = ((gridWidth) * gridSize) + 50;
-			int lastDrawnLineY = ((gridHeight) * gridSize) + 50;
-
-			if (gridX + currentDraggedRectangle.width > lastDrawnLineX) {
-				gridX = lastDrawnLineX - currentDraggedRectangle.width;
-			}
-			if (gridY + currentDraggedRectangle.height > lastDrawnLineY) {
-				gridY = lastDrawnLineY - currentDraggedRectangle.height;
-			}
-
-			// Check for collision with existing rectangles
-			boolean collision = false;
-			for (Rectangle rect : rectangles) {
-				if (rect != currentDraggedRectangle && rect.intersects(new Rectangle(gridX, gridY, currentDraggedRectangle.width, currentDraggedRectangle.height))) {
-					collision = true;
-					break;
-				}
-			}
-
-			// If there is no collision, update the position
-			if (!collision) {
-				currentDraggedRectangle.setLocation(gridX, gridY);
-				repaint();
-				if (isRotateKeyPressed(e)) {
-					int temp = currentDraggedRectangle.width;
-					currentDraggedRectangle.width = currentDraggedRectangle.height;
-					currentDraggedRectangle.height = temp;
-				}
-			}
-		}
-	}
-
-	private boolean isRotateKeyPressed(MouseEvent e) {
-		return e.isShiftDown();
-	}
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		for (Rectangle rect : rectangles) {
-			g.setColor(RectColor);
-			g.fillRect(rect.x, rect.y, rect.width, rect.height);
-		}
-	}
-
-	public void mouseEntered(MouseEvent e) {
-	}
-
-	public void mouseExited(MouseEvent e) {
-	}
-
-	public void mouseMoved(MouseEvent e) {
-	}
+	
+	public static void main(String[] args) {
+		Admiral_Purtee a = new Admiral_Purtee(10,10,100,100,50);
+		System.out.println(a.points()); 
+	  }
+	
 
 }
