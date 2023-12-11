@@ -668,7 +668,7 @@ class CircleCanvas extends JPanel implements MouseListener{
 						// Player put down their turn, so computer go
 						//NEED TO ADD THING TO CHECK IF USER WON OR NOT
 						while (needValue ==false) {
-							System.out.println("Admiral Purtee: My turn to guess!!");
+							System.out.println("Admiral Purtee: It's my turn to guess!!");
 							//get random x and y value  
 							Random rand = new Random();
 							int theRow = rand.nextInt(rows-2);
