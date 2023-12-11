@@ -713,7 +713,7 @@ class CircleCanvas extends JPanel implements MouseListener{
 								for (MyCircle userCircle : userPlacement) {
 									if (circ.intersects(userCircle)) {
 										computerCorrect = computerCorrect + 1;
-										System.out.println("Admiral Purtee has hit your ship! He hit your ship at the point " + "(" + (circ.getX()/cellSize - 1) +","+ (circ.getY()/cellSize-1)+ ")" + "!");
+										System.out.println("Admiral Purtee has hit your ship! He hit your ship at the point " + "(" + (circ.getX()/cellSize - 1) +","+ (circ.getY()/cellSize-1)+ ")!");
 										break;
 									}
 								}
