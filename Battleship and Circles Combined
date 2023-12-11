@@ -497,256 +497,261 @@ class CircleCanvas extends JPanel implements MouseListener{
 	}
 }
 
-class DrawingPanel extends JPanel implements MouseListener{
-	private ArrayList<MyCircle> circles = new ArrayList<>();
-	private ArrayList<MyCircle> computerCircles = new ArrayList<>();
 
-	private Color circleColor = Color.WHITE;
-	private Color computerColor = Color.RED;
-	private int clickCount = 0;
-	private boolean player = true;
-	private int gridSize = 50; // Size of each grid square
-	final int rows = 11;
-	final int columns = 11;
-	final int startRowX = 50;
-	final int startRowY = 100;
-	final int startColX = 100;
-	final int startColY = 50;
-	final int cellSize = 50;
-	final int endRowX = 600;
-	final int endRowY = 100;
-	final int endColX = 100;
-	final int endColY = 600;
-	final Color GridColor = Color.BLACK;
+	class DrawingPanel extends JPanel implements MouseListener{
+		private ArrayList<MyCircle> circles = new ArrayList<>();
+		private ArrayList<MyCircle> computerCircles = new ArrayList<>();
 
-
-	//Create User arraylist
-	ArrayList<MyCircle> userPlacement = new ArrayList<>();
-	ArrayList<ArrayList<Integer>> computerPoints = new ArrayList<ArrayList<Integer>>();
-
-	//For computer, create empty arraylist to store it's guesses and the grid (with all grid coordinates) 
-	ArrayList<MyCircle> computerGuess = new ArrayList<>();
-	ArrayList<ArrayList<ArrayList<Integer>>> gridPoints = new ArrayList<ArrayList<ArrayList<Integer>>>();
-
-	//Keep track of how many guessed correct 
-	int userCorrect;
-	int computerCorrect;
+		private Color circleColor = Color.WHITE;
+		private Color computerColor = Color.RED;
+		private int clickCount = 0;
+		private boolean player = true;
+		private int gridSize = 50; // Size of each grid square
+		final int rows = 11;
+		final int columns = 11;
+		final int startRowX = 50;
+		final int startRowY = 100;
+		final int startColX = 100;
+		final int startColY = 50;
+		final int cellSize = 50;
+		final int endRowX = 600;
+		final int endRowY = 100;
+		final int endColX = 100;
+		final int endColY = 600;
+		final Color GridColor = Color.BLACK;
 
 
-	public DrawingPanel(ArrayList<MyCircle> userPlacement, ArrayList<MyCircle> computerCircles, ArrayList<ArrayList<ArrayList<Integer>>> gridPoints) {
-		setBackground(Color.BLUE);
-		addMouseListener(this);
-		setFocusable(true);
-		this.setUser(userPlacement);
-		this.setComputerCircles(computerCircles); 
-		this.setGridPoints(gridPoints);
+		//Create User arraylist
+		ArrayList<MyCircle> userPlacement = new ArrayList<>();
+		ArrayList<ArrayList<Integer>> computerPoints = new ArrayList<ArrayList<Integer>>();
 
-	}
+		//For computer, create empty arraylist to store it's guesses and the grid (with all grid coordinates) 
+		ArrayList<MyCircle> computerGuess = new ArrayList<>();
+		ArrayList<ArrayList<ArrayList<Integer>>> gridPoints = new ArrayList<ArrayList<ArrayList<Integer>>>();
 
-	//setters for list (user placement) 
-	public void setUser(ArrayList<MyCircle> userPlacement) {
-		this.userPlacement = userPlacement;
-	}
-	public void setComputerCircles(ArrayList<MyCircle> computerCircles) {
-		this.computerCircles = computerCircles;
-	}
-	public void setGridPoints(ArrayList<ArrayList<ArrayList<Integer>>> gridPoints) {
-		this.gridPoints = gridPoints;
-	}
+		//Keep track of how many guessed correct 
+		int userCorrect;
+		int computerCorrect;
 
 
-	@Override
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
+		public DrawingPanel(ArrayList<MyCircle> userPlacement, ArrayList<MyCircle> computerCircles, ArrayList<ArrayList<ArrayList<Integer>>> gridPoints) {
+			setBackground(Color.BLUE);
+			addMouseListener(this);
+			setFocusable(true);
+			this.setUser(userPlacement);
+			this.setComputerCircles(computerCircles); 
+			this.setGridPoints(gridPoints);
 
-		// Draws grid with row and column
-		for (int i = 0; i < rows; i++) {
-			int newStartY = startRowY + i * cellSize;
-			int newEndY = endRowY + i * cellSize;
-			g.setColor(GridColor);
-			g.drawLine(startRowX, newStartY, endRowX, newEndY);
 		}
 
-		for (int i = 0; i < columns; i++) {
-			int newStartX = startColX + i * cellSize;
-			int newEndX = endColX + i * cellSize;
-			g.setColor(GridColor);
-			g.drawLine(newStartX, startColY, newEndX, endColY);
+		//setters for list (user placement) 
+		public void setUser(ArrayList<MyCircle> userPlacement) {
+			this.userPlacement = userPlacement;
 		}
-		
-		for (int i = 0; i+1 < rows; i++) {
-			int newStartY = startRowY + i * cellSize;
-			g.setColor(GridColor);
-			g.drawString(Integer.toString(i+1), startRowX +25, newStartY + cellSize / 2);
+		public void setComputerCircles(ArrayList<MyCircle> computerCircles) {
+			this.computerCircles = computerCircles;
 		}
-		
-		// Draws grids with row and column numbers
-		for (int i = 0; i+1 < columns; i++) {
-			int newStartX = startColX + i * cellSize;
-			g.setColor(GridColor);
-			g.drawString(Integer.toString(i+1), newStartX - 50 + cellSize + cellSize / 2, startColY + cellSize- 15);
+		public void setGridPoints(ArrayList<ArrayList<ArrayList<Integer>>> gridPoints) {
+			this.gridPoints = gridPoints;
 		}
 
-		// Draw circles (existing code)
-		for (MyCircle d : circles) {
-			g.setColor(d.circleColor);
-			int r = 40;
-			g.fillOval(d.x - r / 2, d.y - r / 2, r, r);
-		}
 
-		repaint();
-	}
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
 
-
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		
-		System.out.println("ClickCount: "+ clickCount + "and player"+ player);
-		if (clickCount < 1 && player) {
-			boolean needValue = false;
-
-			//Check so it's in bound
-			if (e.getX() > 600 || e.getX() <100 || e.getY()>600 || e.getY()<100) {
-				System.out.println("Sorry, out of bound. Try again");
+			// Draw grid with row and column numbers
+			for (int i = 0; i < rows; i++) {
+				int newStartY = startRowY + i * cellSize;
+				int newEndY = endRowY + i * cellSize;
+				g.setColor(GridColor);
+				g.drawLine(startRowX, newStartY, endRowX, newEndY);
+			}
+			for (int i = 0; i+1 < rows; i++) {
+				int newStartY = startRowY + i * cellSize;
+				g.setColor(GridColor);
+				g.drawString(Integer.toString(i+1), startRowX +25, newStartY + cellSize / 2);
 			}
 
-			else {
-				int r = 30;
+			for (int i = 0; i < columns; i++) {
+				int newStartX = startColX + i * cellSize;
+				int newEndX = endColX + i * cellSize;
+				g.setColor(GridColor);
+				g.drawLine(newStartX, startColY, newEndX, endColY);
+			}
 
-				// Calculate the grid coordinates
-				int gridX = e.getX() / cellSize;
-				int gridY = e.getY() / cellSize;
-				int gridX1 = gridX -1;
-				int gridY1 = gridY-1;
+			for (int i = 0; i+1 < columns; i++) {
+				int newStartX = startColX + i * cellSize;
+				g.setColor(GridColor);
+				g.drawString(Integer.toString(i+1), newStartX - 50 + cellSize + cellSize / 2, startColY + cellSize- 15);
+			}
 
-				// Calculate the center of the grid square
-				int centerX = gridX * cellSize + cellSize / 2;
-				int centerY = gridY * cellSize + cellSize / 2;
+			// Draw circles (existing code)
+			for (MyCircle d : circles) {
+				g.setColor(d.circleColor);
+				int r = 40;
+				g.fillOval(d.x - r / 2, d.y - r / 2, r, r);
+			}
 
-				// Create a new circle for comparison
-				MyCircle newCircle = new MyCircle(centerX, centerY, r, circleColor);
+			repaint();
+		}
 
-				// Check for overlap with existing circles
-				boolean overlap = false;
-				for (MyCircle existingCircle : circles) {
-					if (newCircle.intersects(existingCircle)) {
-						overlap = true;
-						needValue = true;
-						break;
-					}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+
+			System.out.println("ClickCount: "+ clickCount + "And player"+ player);
+			if (clickCount < 1 && player) {
+				boolean needValue = false;
+
+				//Check so it's in bound
+				if (e.getX() > 600 || e.getX() <100 || e.getY()>600 || e.getY()<100) {
+					System.out.println("Sorry, out of bound. Try again");
 				}
 
-				if (!overlap) {
-					System.out.println("You clicked at (" + gridX1 + "," + gridY1 + ").");
+				else {
+					int r = 30;
 
-					//Check if it hit computer circles
-					for (MyCircle comp : computerCircles) {
-						if (newCircle.intersects(comp)) {
-							newCircle.setColor(Color.RED);
-							System.out.println("You hit!");
-							userCorrect = userCorrect + 1;
-							break;
-						}
-					}
+					// Calculate the grid coordinates
+					int gridX = e.getX() / cellSize;
+					int gridY = e.getY() / cellSize;
+					int gridX1 = gridX -1;
+					int gridY1 = gridY-1;
 
-					circles.add(newCircle);
-					clickCount++;
+					// Calculate the center of the grid square
+					int centerX = gridX * cellSize + cellSize / 2;
+					int centerY = gridY * cellSize + cellSize / 2;
 
-					player = false;
+					// Create a new circle for comparison
+					MyCircle newCircle = new MyCircle(centerX, centerY, r, circleColor);
 
-					repaint();
-				} else {
-					System.out.println("You already chose this coordinate. Try again");
-				}
-
-				//Check user won or not 
-				if (userCorrect == 10){
-					System.out.println("YOU WON!!");
-				}
-
-
-				// Player put down their turn, so computer go
-				//NEED TO ADD THING TO CHECK IF USER WON OR NOT
-				while (needValue ==false) {
-					System.out.println("My turn to guess!!");
-					//get random x and y value  
-					Random rand = new Random();
-					int theRow = rand.nextInt(rows-2);
-					int theColumn = rand.nextInt(columns-2);
-					System.out.println("Computer guessed: row + column " + "(" + theRow +"," + theColumn + ")");
-
-					//get the array w/ integers
-					System.out.println("This is: "+ gridPoints.get(theRow).get(theColumn));
-					ArrayList<Integer> addingPoint = gridPoints.get(theRow).get(theColumn);
-					int computerX = addingPoint.get(0);
-					int computerY = addingPoint.get(1);
-
-					//Create circle w/ the x and y (and add to computerGuess)
-					MyCircle circ = new MyCircle(computerX, computerY, 30, Color.GREEN);
-					System.out.println("Computer guessed: " + computerX + " and "+ computerY);
-					//System.out.println("Admiral Purtee attacked at " + (circ.getX()/cellSize - 1) +", "+ (circ.getY()/cellSize-1)+"!");
-
-
-					//Make sure didn't make same guess
-					for (MyCircle cir : computerGuess) {
-						if (circ.intersects(cir)){
+					// Check for overlap with existing circles
+					boolean overlap = false;
+					for (MyCircle existingCircle : circles) {
+						if (newCircle.intersects(existingCircle)) {
+							overlap = true;
 							needValue = true;
 							break;
 						}
 					}
-					//if didn't overlap, break, if overlapped, continue
-					if (needValue == true) {
-						System.out.println("Overlaped guess...");
-						needValue = false;
-						continue;
-					}
 
-					else {
-						computerGuess.add(circ);
-						player = true;
-						clickCount = 0;
-						needValue = true;
+					if (!overlap) {
+						System.out.println("You clicked at (" + gridX1 + "," + gridY1 + ").");
 
-						//Check if it hit or not 
-						for (MyCircle userCircle : userPlacement) {
-							if (circ.intersects(userCircle)) {
-								computerCorrect = computerCorrect + 1;
-								System.out.println("Admiral Purtee has hit your ship! He hit at point" + (circ.getX()/cellSize - 1) +", "+ (circ.getY()/cellSize-1)+"!");
+						//Check if it hit computer circles
+						for (MyCircle comp : computerCircles) {
+							if (newCircle.intersects(comp)) {
+								newCircle.setColor(Color.RED);
+								System.out.println("You hit!");
+								userCorrect = userCorrect + 1;
 								break;
 							}
 						}
-						break;
+
+						circles.add(newCircle);
+						clickCount++;
+
+						player = false;
+
+						repaint();
+					} else {
+						System.out.println("You already chose this coordinate. Try again");
+					}
+
+					//Check if user won or not 
+					//Check user won or not 
+					if (userCorrect == 10){
+						System.out.println("YOU WON!! Congragulations!!");
+						clickCount = 1;
+						player = false;
+						needValue = true;
+					}
+
+
+					else {
+
+						// Player put down their turn, so computer go
+						//NEED TO ADD THING TO CHECK IF USER WON OR NOT
+						while (needValue ==false) {
+							System.out.println("My turn to geuss!!");
+							//get random x and y value  
+							Random rand = new Random();
+							int theRow = rand.nextInt(rows-2);
+							int theColumn = rand.nextInt(columns-2);
+							System.out.println("Computer guessed: row+coorlunn " + theRow +" " + theColumn);
+
+							//get the array w/ integers
+							System.out.println("This is: "+ gridPoints.get(theRow).get(theColumn));
+							ArrayList<Integer> addingPoint = gridPoints.get(theRow).get(theColumn);
+							int computerX = addingPoint.get(0);
+							int computerY = addingPoint.get(1);
+
+							//Create circle w/ the x and y (and add to computerGuess)
+							MyCircle circ = new MyCircle(computerX, computerY, 30, Color.GREEN);
+							System.out.println("Computer guessed: " + computerX + "And "+ computerY);
+							//System.out.println("Admiral Purtee attacked at " + (circ.getX()/cellSize - 1) +", "+ (circ.getY()/cellSize-1)+"!");
+
+
+							//Make sure didn't make same guess
+							for (MyCircle cir : computerGuess) {
+								if (circ.intersects(cir)){
+									needValue = true;
+									break;
+								}
+							}
+							//if didn't overlap, break, if overlapped, continue
+							if (needValue == true) {
+								System.out.println("Overlaped guess...");
+								needValue = false;
+								continue;
+							}
+
+							else {
+								computerGuess.add(circ);
+								player = true;
+								clickCount = 0;
+								needValue = true;
+
+								//Check if it hit or not 
+								for (MyCircle userCircle : userPlacement) {
+									if (circ.intersects(userCircle)) {
+										computerCorrect = computerCorrect + 1;
+										System.out.println("Admiral Purtee has hit your ship! He hit at " + (circ.getX()/cellSize - 1) +", "+ (circ.getY()/cellSize-1)+"!");
+										break;
+									}
+								}
+								break;
+							}
+						}
+						//Check if computer won or not 
+						//Check user won or not 
+						if (computerCorrect == 10){
+							System.out.println("Oh no, Admiral Purtee won... :( ");
+							player = false;
+						}
+
 					}
 				}
-				//Check if computer won or not 
-				//Check user won or not 
-				if (computerCorrect == 10){
-					System.out.println("Oh no, Admiral Purtee won... :( ");
-					player = false;
-				}
-
 			}
+
 		}
 
-	}
+		@Override
+		public void mousePressed(MouseEvent e) {
+		}
 
-	@Override
-	public void mousePressed(MouseEvent e) {
-	}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+		}
 
-	@Override
-	public void mouseReleased(MouseEvent e) {
-	}
+		@Override
+		public void mouseEntered(MouseEvent e) {
+		}
 
-	@Override
-	public void mouseEntered(MouseEvent e) {
+		@Override
+		public void mouseExited(MouseEvent e) {
+		}
 	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-	}
-}
 
 
 class Grids extends RectangleCanvas {
