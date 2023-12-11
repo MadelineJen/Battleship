@@ -601,7 +601,7 @@ class CircleCanvas extends JPanel implements MouseListener{
 
 				//Check so it's in bound
 				if (e.getX() > 600 || e.getX() <100 || e.getY()>600 || e.getY()<100) {
-					System.out.println("Sorry, out of bound. Try again");
+					System.out.println("Sorry, you clicked out of bounds. Please try again");
 				}
 
 				else {
