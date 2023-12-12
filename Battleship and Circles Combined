@@ -694,17 +694,17 @@ class DrawingPanel extends JPanel implements MouseListener{
 					// Player put down their turn, so computer go
 					//NEED TO ADD THING TO CHECK IF USER WON OR NOT
 					while (needValue ==false) {
-						System.out.println("Admiral Purtee: It's my turn to guess!!");
+						System.out.println("Admiral Purtee: \"It's my turn to guess!!\"");
 						//get random x and y value  
 						Random rand = new Random();
 						int theRow = rand.nextInt(rows-2);
 						int theColumn = rand.nextInt(columns-2);
 						int theRow1 = theRow+1;
 						int theColumn1 = theColumn+1;		
-						System.out.println("Admiral Purtee guessed row " + theRow1 +" and column " + theColumn1);
+						System.out.println("He attacked at: [" + theRow1 +", " + theColumn1 + "]");
 
 						//get the array w/ integers
-						System.out.println("This is: "+ gridPoints.get(theRow).get(theColumn));
+						//System.out.println("This is: "+ gridPoints.get(theRow).get(theColumn));
 						ArrayList<Integer> addingPoint = gridPoints.get(theRow).get(theColumn);
 						int computerX = addingPoint.get(0);
 						int computerY = addingPoint.get(1);
