@@ -16,6 +16,7 @@ import java.awt.FlowLayout;
 import java.awt.Rectangle;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -86,11 +87,11 @@ public class Battleship {
 		            public void actionPerformed(ActionEvent e) {
 		            	
 		            	if (drawingPanel.userWin == true) {
-		            		messagePurtee.setText("Nooooo, you won... Congragulations!");
+		            		messagePurtee.setText("    Nooooo, you won... Congragulations!");
 		            	}
 		            	
 		            	else if (drawingPanel.computerWin == true) {
-		            		messagePurtee.setText("WAHAHAHA! I WIN!");
+		            		messagePurtee.setText(" HAHAHAHA! I WIN!");
 		            	}
 		            	
 		            }
@@ -1153,4 +1154,3 @@ class Admiral_Purtee {
 
 	}
 }
-
